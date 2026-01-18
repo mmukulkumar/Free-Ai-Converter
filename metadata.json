@@ -1,0 +1,5 @@
+{
+  "name": "Free AI Converter",
+  "description": "A client-side AI-powered file conversion tool that compresses vector images and converts various formats directly in the browser.",
+  "requestFramePermissions": []
+}
