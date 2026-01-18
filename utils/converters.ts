@@ -28,16 +28,35 @@ export const convertFile = async (
   // --- 0. Background Remover (AI) ---
   if (tool === 'bg-remover') {
       try {
-          // Use jsDelivr for version 1.5.5 assets.
-          // This path is generally reliable and supports CORS.
-          // We must ensure the library version in index.html matches the data version here (1.5.5).
-          const blob = await removeBackground(file, {
-              publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.5.5/dist/', 
-              progress: (key: string, current: number, total: number) => {
-                 // console.log(`Downloading ${key}: ${Math.round(current/total * 100)}%`);
+          // Try multiple CDN sources for background removal data
+          // esm.sh is primary (handles all deps automatically), with other CDNs as fallbacks
+          const publicPaths = [
+              'https://esm.sh/@imgly/background-removal-data@1.5.5/dist/',
+              'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.5.5/dist/',
+              'https://cdn.jsdelivr.net/gh/imgly/background-removal-data@1.5.5/dist/'
+          ];
+          
+          let blob;
+          let lastError;
+          
+          for (const publicPath of publicPaths) {
+              try {
+                  blob = await removeBackground(file, {
+                      publicPath: publicPath,
+                      progress: (key: string, current: number, total: number) => {
+                         // console.log(`Downloading ${key}: ${Math.round(current/total * 100)}%`);
+                      }
+                  });
+                  return { content: blob, extension: 'png' };
+              } catch (e) {
+                  lastError = e;
+                  // Continue to next CDN
+                  continue;
               }
-          });
-          return { content: blob, extension: 'png' };
+          }
+          
+          // If all CDNs fail, throw the last error
+          throw lastError;
       } catch (error) {
           console.error("Background removal failed:", error);
           let errorMsg = "Failed to remove background.";
