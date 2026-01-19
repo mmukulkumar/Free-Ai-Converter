@@ -4,7 +4,7 @@ import { OptimizerSettings } from '../types';
 import { jsPDF } from 'jspdf';
 import heic2any from 'heic2any';
 import * as pdfjsLib from 'pdfjs-dist';
-import { removeBackground } from '@imgly/background-removal';
+import { removeBackground, removeBackgroundAdvanced, initializeBackgroundRemoval } from './backgroundRemover';
 
 // Initialize PDF.js worker
 // We point to the same version as defined in the importmap to avoid version mismatch errors
@@ -28,47 +28,18 @@ export const convertFile = async (
   // --- 0. Background Remover (AI) ---
   if (tool === 'bg-remover') {
       try {
-          // Try multiple CDN sources for background removal data
-          // esm.sh is primary (handles all deps automatically), with other CDNs as fallbacks
-          const publicPaths = [
-              'https://esm.sh/@imgly/background-removal-data@1.5.5/dist/',
-              'https://cdn.jsdelivr.net/npm/@imgly/background-removal-data@1.5.5/dist/',
-              'https://cdn.jsdelivr.net/gh/imgly/background-removal-data@1.5.5/dist/'
-          ];
+          // Initialize background removal system if not already done
+          await initializeBackgroundRemoval();
           
-          let blob;
-          let lastError;
-          
-          for (const publicPath of publicPaths) {
-              try {
-                  blob = await removeBackground(file, {
-                      publicPath: publicPath,
-                      progress: (key: string, current: number, total: number) => {
-                         // console.log(`Downloading ${key}: ${Math.round(current/total * 100)}%`);
-                      }
-                  });
-                  return { content: blob, extension: 'png' };
-              } catch (e) {
-                  lastError = e;
-                  // Continue to next CDN
-                  continue;
-              }
-          }
-          
-          // If all CDNs fail, throw the last error
-          throw lastError;
+          // Use advanced background removal
+          const blob = await removeBackgroundAdvanced(file);
+          return { content: blob, extension: 'png' };
       } catch (error) {
           console.error("Background removal failed:", error);
           let errorMsg = "Failed to remove background.";
           
           if (error instanceof Error) {
-             if (error.message.includes('fetch') || error.message.includes('NetworkError') || error.message.includes('404')) {
-                 errorMsg += " Could not download necessary AI models. This may be due to a network issue or CORS restriction.";
-             } else if (error.message.includes('metadata')) {
-                 errorMsg += " Model metadata not found. Please try again or check for updates.";
-             } else {
-                 errorMsg += ` ${error.message}`;
-             }
+             errorMsg += ` ${error.message}`;
           }
           throw new Error(errorMsg);
       }
