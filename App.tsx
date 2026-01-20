@@ -28,6 +28,53 @@ const FREE_LIMIT = 20;
 type ViewState = 'landing' | 'home' | 'login' | 'signup' | 'privacy' | 'terms' | 'promote' | 'about';
 type UserState = { name: string; email: string } | null;
 
+// --- SEO & Routing Helpers ---
+const getToolSlug = (tool: ToolType): string => {
+  if (tool === 'image-compressor') return 'compress-image';
+  if (tool === 'bg-remover') return 'remove-background';
+  if (tool === 'optimizer') return 'svg-optimizer';
+  return tool.replace('-', '-to-');
+};
+
+const getToolFromSlug = (slug: string): ToolType | null => {
+  if (slug === 'compress-image') return 'image-compressor';
+  if (slug === 'remove-background') return 'bg-remover';
+  if (slug === 'svg-optimizer') return 'optimizer';
+  if (slug.includes('-to-')) return slug.replace('-to-', '-') as ToolType;
+  return null;
+};
+
+const getSeoMetadata = (view: ViewState, tool: ToolType) => {
+  if (view === 'landing') return {
+      title: 'Free AI Converter | Secure Client-Side File Tools',
+      description: 'Optimize images, remove backgrounds, and convert documents securely in your browser. No server uploads, 100% private.'
+  };
+  if (view === 'login') return { title: 'Login - Free AI Converter', description: 'Login to your account.' };
+  if (view === 'signup') return { title: 'Sign Up - Free AI Converter', description: 'Create a free account.' };
+  if (view === 'privacy') return { title: 'Privacy Policy - Free AI Converter', description: 'Our commitment to your privacy.' };
+  if (view === 'terms') return { title: 'Terms of Service - Free AI Converter', description: 'Terms and conditions.' };
+  if (view === 'about') return { title: 'About Us - Free AI Converter', description: 'About Free AI Converter.' };
+  if (view === 'promote') return { title: 'Promote - Free AI Converter', description: 'Promote our app.' };
+
+  if (view === 'home') {
+      switch(tool) {
+          case 'image-compressor': return { title: 'Free Image Compressor - Optimize JPG, PNG, WEBP', description: 'Compress images online without losing quality. Client-side compression ensures your photos never leave your device.' };
+          case 'bg-remover': return { title: 'Free Background Remover - AI Powered', description: 'Remove image backgrounds instantly with AI. 100% free and private running locally in your browser.' };
+          case 'optimizer': return { title: 'SVG Optimizer - Minify Vector Graphics', description: 'Optimize SVG files for web. Clean up code and reduce file size securely.' };
+          default: 
+              const parts = tool.split('-');
+              if (parts.length === 2) {
+                  return { 
+                      title: `Convert ${parts[0].toUpperCase()} to ${parts[1].toUpperCase()} - Free Tool`, 
+                      description: `Free online ${parts[0].toUpperCase()} to ${parts[1].toUpperCase()} converter. Secure client-side conversion.` 
+                  };
+              }
+              return { title: 'Free AI Converter Tool', description: 'Secure online file conversion tool.' };
+      }
+  }
+  return { title: 'Free AI Converter', description: 'Secure client-side file tools.' };
+};
+
 const App: React.FC = () => {
   // App Routing & Auth State
   const [currentView, setCurrentView] = useState<ViewState>('landing');
@@ -74,10 +121,75 @@ const App: React.FC = () => {
     }
   }, []);
 
-  // Set dynamic favicon and title
+  // --- Routing Logic ---
   useEffect(() => {
-    document.title = "Free AI Converter | Secure Client-Side Tools";
+    const handlePopState = () => {
+      const path = window.location.pathname.substring(1); // remove leading slash
+      
+      if (path === '' || path === 'home') {
+        setCurrentView('landing');
+        return;
+      }
+      
+      if (['login', 'signup', 'privacy', 'terms', 'promote', 'about'].includes(path)) {
+        setCurrentView(path as ViewState);
+        return;
+      }
+
+      const tool = getToolFromSlug(path);
+      if (tool) {
+        setActiveTab(tool);
+        setCurrentView('home');
+      } else {
+        // 404 fallback to landing
+        setCurrentView('landing');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    handlePopState(); // Initial check
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // --- SEO & URL Sync ---
+  useEffect(() => {
+    // 1. Update URL
+    let path = '/';
+    if (currentView !== 'landing') {
+        if (currentView === 'home') {
+            path = '/' + getToolSlug(activeTab);
+        } else {
+            path = '/' + currentView;
+        }
+    }
+
+    if (window.location.pathname !== path) {
+        window.history.pushState({}, '', path);
+    }
+
+    // 2. Update Meta Tags
+    const seo = getSeoMetadata(currentView, activeTab);
+    document.title = seo.title;
     
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.setAttribute('name', 'description');
+        document.head.appendChild(metaDesc);
+    }
+    metaDesc.setAttribute('content', seo.description);
+
+    // 3. Canonical URL
+    let linkCanonical = document.querySelector('link[rel="canonical"]');
+    if (!linkCanonical) {
+        linkCanonical = document.createElement('link');
+        linkCanonical.setAttribute('rel', 'canonical');
+        document.head.appendChild(linkCanonical);
+    }
+    linkCanonical.setAttribute('href', window.location.href);
+
+    // 4. Favicon (Dynamic)
     let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
     if (!link) {
       link = document.createElement('link');
@@ -85,7 +197,7 @@ const App: React.FC = () => {
       document.head.appendChild(link);
     }
     link.href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>`;
-  }, []);
+  }, [currentView, activeTab]);
 
   // Configure accepted files based on active tool
   const getAcceptedExtensions = useCallback((tool: ToolType): string[] => {

@@ -39,21 +39,23 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button 
-                    onClick={() => onNavigate('image-compressor')}
+                <a 
+                    href="/compress-image"
+                    onClick={(e) => { e.preventDefault(); onNavigate('image-compressor'); }}
                     className="w-full sm:w-auto px-8 py-4 bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-xl shadow-slate-900/20 hover:bg-slate-800 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group"
                 >
                     <ImageIcon className="w-5 h-5" />
                     Compress Images
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button 
-                    onClick={() => onNavigate('optimizer')}
+                </a>
+                <a 
+                    href="/svg-optimizer"
+                    onClick={(e) => { e.preventDefault(); onNavigate('optimizer'); }}
                     className="w-full sm:w-auto px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-2xl font-bold text-lg shadow-lg shadow-slate-200/50 hover:border-primary-200 hover:text-primary-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
                     <Layers className="w-5 h-5" />
                     SVG Tools
-                </button>
+                </a>
             </div>
         </div>
       </section>
@@ -62,8 +64,9 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
       <section className="max-w-6xl mx-auto px-4 mb-24">
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {/* Tool Card 1 */}
-             <div 
-                onClick={() => onNavigate('image-compressor')}
+             <a 
+                href="/compress-image"
+                onClick={(e) => { e.preventDefault(); onNavigate('image-compressor'); }}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-primary-100 transition-all cursor-pointer relative overflow-hidden"
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
@@ -79,11 +82,12 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         Try Compressor <ArrowRight className="w-4 h-4 ml-2" />
                     </span>
                 </div>
-             </div>
+             </a>
 
              {/* Tool Card 2 - Background Remover */}
-             <div 
-                onClick={() => onNavigate('bg-remover')}
+             <a 
+                href="/remove-background"
+                onClick={(e) => { e.preventDefault(); onNavigate('bg-remover'); }}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-rose-100 transition-all cursor-pointer relative overflow-hidden"
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
@@ -99,11 +103,12 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         Remove Background <ArrowRight className="w-4 h-4 ml-2" />
                     </span>
                 </div>
-             </div>
+             </a>
 
              {/* Tool Card 3 */}
-             <div 
-                onClick={() => onNavigate('optimizer')}
+             <a 
+                href="/svg-optimizer"
+                onClick={(e) => { e.preventDefault(); onNavigate('optimizer'); }}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-purple-100 transition-all cursor-pointer relative overflow-hidden"
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
@@ -119,11 +124,12 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         Open SVG Tools <ArrowRight className="w-4 h-4 ml-2" />
                     </span>
                 </div>
-             </div>
+             </a>
 
              {/* Tool Card 4 */}
-             <div 
-                onClick={() => onNavigate('pdf-docx')}
+             <a 
+                href="/pdf-to-docx"
+                onClick={(e) => { e.preventDefault(); onNavigate('pdf-docx'); }}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-emerald-100 transition-all cursor-pointer relative overflow-hidden"
             >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
@@ -139,7 +145,7 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         Convert Docs <ArrowRight className="w-4 h-4 ml-2" />
                     </span>
                 </div>
-             </div>
+             </a>
          </div>
       </section>
 

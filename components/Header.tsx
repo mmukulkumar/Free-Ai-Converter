@@ -24,6 +24,13 @@ interface HeaderProps {
   onPromoteClick: () => void;
 }
 
+const getToolSlug = (tool: ToolType): string => {
+    if (tool === 'image-compressor') return 'compress-image';
+    if (tool === 'bg-remover') return 'remove-background';
+    if (tool === 'optimizer') return 'svg-optimizer';
+    return tool.replace('-', '-to-');
+};
+
 const Header: React.FC<HeaderProps> = ({ 
   activeTab, 
   onTabChange, 
@@ -258,7 +265,8 @@ const Header: React.FC<HeaderProps> = ({
                         </div>
                         
                         <div className="space-y-2 relative z-10">
-                            <button 
+                            <a 
+                                href="/compress-image"
                                 onClick={() => {
                                     onTabChange('image-compressor');
                                     setIsMegaMenuOpen(false);
@@ -266,8 +274,9 @@ const Header: React.FC<HeaderProps> = ({
                                 className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
                             >
                                 <ImageIcon className="w-4 h-4" /> Compressor
-                            </button>
-                            <button 
+                            </a>
+                            <a 
+                                href="/remove-background"
                                 onClick={() => {
                                     onTabChange('bg-remover');
                                     setIsMegaMenuOpen(false);
@@ -275,8 +284,9 @@ const Header: React.FC<HeaderProps> = ({
                                 className="w-full py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all flex items-center justify-center gap-2"
                             >
                                 <Eraser className="w-4 h-4" /> BG Remover
-                            </button>
-                            <button 
+                            </a>
+                            <a 
+                                href="/svg-optimizer"
                                 onClick={() => {
                                     onTabChange('optimizer');
                                     setIsMegaMenuOpen(false);
@@ -284,7 +294,7 @@ const Header: React.FC<HeaderProps> = ({
                                 className="w-full py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all flex items-center justify-center gap-2"
                             >
                                 <Layers className="w-4 h-4" /> SVG Optimizer
-                            </button>
+                            </a>
                         </div>
                     </div>
 
@@ -301,8 +311,10 @@ const Header: React.FC<HeaderProps> = ({
                                     <ul className="space-y-1">
                                         {category.items.filter(item => item.id !== 'bg-remover').map((item) => (
                                             <li key={item.id}>
-                                                <button
-                                                    onClick={() => {
+                                                <a
+                                                    href={`/${getToolSlug(item.id)}`}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
                                                         onTabChange(item.id);
                                                         setIsMegaMenuOpen(false);
                                                     }}
@@ -310,7 +322,7 @@ const Header: React.FC<HeaderProps> = ({
                                                 >
                                                     <span>{item.label}</span>
                                                     {activeTab === item.id && <div className="w-1.5 h-1.5 rounded-full bg-primary-500"></div>}
-                                                </button>
+                                                </a>
                                             </li>
                                         ))}
                                     </ul>
