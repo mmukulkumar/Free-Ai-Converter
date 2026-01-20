@@ -277,28 +277,6 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
               </div>
           </div>
       </section>
-
-      {/* Quick Links Footer */}
-      <footer className="max-w-4xl mx-auto text-center pt-12 border-t border-slate-200">
-          <p className="text-slate-500 font-medium mb-6">Ready to get started?</p>
-          <div className="flex flex-wrap justify-center gap-3">
-              <button onClick={() => onNavigate('image-compressor')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
-                  Compress Images
-              </button>
-              <button onClick={() => onNavigate('bg-remover')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
-                  Remove Background
-              </button>
-              <button onClick={() => onNavigate('png-webp')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
-                  PNG to WEBP
-              </button>
-              <button onClick={() => onNavigate('svg-png')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
-                  SVG to PNG
-              </button>
-              <button onClick={() => onNavigate('jpg-pdf')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
-                  JPG to PDF
-              </button>
-          </div>
-      </footer>
     </div>
   );
 };
