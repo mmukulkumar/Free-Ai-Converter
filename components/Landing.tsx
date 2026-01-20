@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ShieldCheck, Zap, Cpu, Image as ImageIcon, Layers, FileText, ArrowRight, Lock, Eye, Globe } from 'lucide-react';
+import { ShieldCheck, Zap, Cpu, Image as ImageIcon, Layers, FileText, ArrowRight, Lock, Eye, Globe, Eraser } from 'lucide-react';
 import { ToolType } from '../types';
 import AnimatedTitle from './AnimatedTitle';
 
@@ -60,7 +60,7 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
 
       {/* Primary Tools Grid */}
       <section className="max-w-6xl mx-auto px-4 mb-24">
-         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              {/* Tool Card 1 */}
              <div 
                 onClick={() => onNavigate('image-compressor')}
@@ -81,7 +81,27 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                 </div>
              </div>
 
-             {/* Tool Card 2 */}
+             {/* Tool Card 2 - Background Remover */}
+             <div 
+                onClick={() => onNavigate('bg-remover')}
+                className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-rose-100 transition-all cursor-pointer relative overflow-hidden"
+            >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+                <div className="relative z-10">
+                    <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                        <Eraser className="w-7 h-7" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-rose-600 transition-colors">Background Remover</h3>
+                    <p className="text-slate-500 leading-relaxed mb-6">
+                        Instantly remove backgrounds from images. Powered by smart edge detection running locally in your browser.
+                    </p>
+                    <span className="inline-flex items-center font-bold text-rose-600 group-hover:translate-x-2 transition-transform">
+                        Remove Background <ArrowRight className="w-4 h-4 ml-2" />
+                    </span>
+                </div>
+             </div>
+
+             {/* Tool Card 3 */}
              <div 
                 onClick={() => onNavigate('optimizer')}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-purple-100 transition-all cursor-pointer relative overflow-hidden"
@@ -101,7 +121,7 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                 </div>
              </div>
 
-             {/* Tool Card 3 */}
+             {/* Tool Card 4 */}
              <div 
                 onClick={() => onNavigate('pdf-docx')}
                 className="group p-8 bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:border-emerald-100 transition-all cursor-pointer relative overflow-hidden"
@@ -264,6 +284,9 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
           <div className="flex flex-wrap justify-center gap-3">
               <button onClick={() => onNavigate('image-compressor')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
                   Compress Images
+              </button>
+              <button onClick={() => onNavigate('bg-remover')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
+                  Remove Background
               </button>
               <button onClick={() => onNavigate('png-webp')} className="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-600 hover:border-primary-300 hover:text-primary-600 transition-colors">
                   PNG to WEBP

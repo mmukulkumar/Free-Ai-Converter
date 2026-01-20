@@ -1,14 +1,7 @@
 
 import { optimizeSVG } from './optimizer';
 import { OptimizerSettings } from '../types';
-import { jsPDF } from 'jspdf';
-import heic2any from 'heic2any';
-import * as pdfjsLib from 'pdfjs-dist';
 import { removeBackground, removeBackgroundAdvanced, initializeBackgroundRemoval } from './backgroundRemover';
-
-// Initialize PDF.js worker
-// We point to the same version as defined in the importmap to avoid version mismatch errors
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://esm.sh/pdfjs-dist@5.4.530/build/pdf.worker.min.js';
 
 // Formats that most modern browsers can decode natively via 'new Image()'
 const NATIVE_READ_FORMATS = [
@@ -226,6 +219,7 @@ const getMimeType = (ext: string) => {
  */
 const convertHeic = async (file: File, outputFmt: string, settings?: OptimizerSettings): Promise<{ content: Blob; extension: string }> => {
     try {
+        const heic2any = (await import('heic2any')).default;
         const targetMime = outputFmt === 'png' ? 'image/png' : 'image/jpeg';
         const convertedBlob = await heic2any({
             blob: file,
@@ -252,6 +246,9 @@ const convertHeic = async (file: File, outputFmt: string, settings?: OptimizerSe
  */
 const convertPdfToImage = async (file: File, outputFmt: string, settings?: OptimizerSettings): Promise<{ content: Blob; extension: string }> => {
     try {
+        const pdfjsLib = await import('pdfjs-dist');
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`;
+        
         const arrayBuffer = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
         const page = await pdf.getPage(1);
@@ -288,7 +285,8 @@ const convertImageToPdf = (file: File, settings?: OptimizerSettings): Promise<{ 
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
-            img.onload = () => {
+            img.onload = async () => {
+                const { jsPDF } = await import('jspdf');
                 const opts = settings?.pdfOptions || getDefaultSettings().pdfOptions;
                 let docWidth: number, docHeight: number;
                 let orientation: 'p' | 'l' = opts.orientation === 'landscape' ? 'l' : 'p';

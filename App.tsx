@@ -12,6 +12,9 @@ import Signup from './components/Signup';
 import LimitModal from './components/LimitModal';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
+import PromoteApp from './components/PromoteApp';
+import AboutUs from './components/AboutUs';
+import Footer from './components/Footer';
 import AnimatedTitle from './components/AnimatedTitle';
 import GridLoader from './components/GridLoader';
 import Landing from './components/Landing';
@@ -22,7 +25,7 @@ import { ALL_TABS } from './utils/formats';
 
 const FREE_LIMIT = 20;
 
-type ViewState = 'landing' | 'home' | 'login' | 'signup' | 'privacy' | 'terms';
+type ViewState = 'landing' | 'home' | 'login' | 'signup' | 'privacy' | 'terms' | 'promote' | 'about';
 type UserState = { name: string; email: string } | null;
 
 const App: React.FC = () => {
@@ -69,6 +72,19 @@ const App: React.FC = () => {
     if (savedCount) {
         setUsageCount(parseInt(savedCount, 10));
     }
+  }, []);
+
+  // Set dynamic favicon and title
+  useEffect(() => {
+    document.title = "Free AI Converter | Secure Client-Side Tools";
+    
+    let link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>`;
   }, []);
 
   // Configure accepted files based on active tool
@@ -301,8 +317,16 @@ const App: React.FC = () => {
       return <Privacy onBack={() => setCurrentView('landing')} />;
   }
   
+  if (currentView === 'promote') {
+      return <PromoteApp onBack={() => setCurrentView('landing')} />;
+  }
+
   if (currentView === 'terms') {
       return <Terms onBack={() => setCurrentView('landing')} />;
+  }
+
+  if (currentView === 'about') {
+      return <AboutUs onBack={() => setCurrentView('landing')} />;
   }
 
   if (currentView === 'login') {
@@ -345,6 +369,10 @@ const App: React.FC = () => {
         onSignupClick={() => setCurrentView('signup')}
         onLogoutClick={handleLogout}
         onHomeClick={handleHomeClick}
+        onAboutClick={() => setCurrentView('about')}
+        onPrivacyClick={() => setCurrentView('privacy')}
+        onTermsClick={() => setCurrentView('terms')}
+        onPromoteClick={() => setCurrentView('promote')}
       />
 
       {/* Limit Modal */}
@@ -495,6 +523,12 @@ const App: React.FC = () => {
         )}
 
       </main>
+
+      <Footer 
+        onPrivacyClick={() => setCurrentView('privacy')}
+        onTermsClick={() => setCurrentView('terms')}
+        onAboutClick={() => setCurrentView('about')}
+      />
     </div>
   );
 };

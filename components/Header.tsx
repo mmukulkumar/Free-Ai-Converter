@@ -3,7 +3,8 @@ import React, { useState, useRef } from 'react';
 import { 
     ChevronDown, Search, Menu, X, Zap, User, LogOut, 
     Image as ImageIcon, FileText, Video, Music, Box, Camera, 
-    Sparkles, Layers, Grid, ArrowRight, Cpu 
+    Sparkles, Layers, Grid, ArrowRight, Cpu, Eraser,
+    BookOpen, Info, Rocket, ShieldCheck
 } from 'lucide-react';
 import { MENU_CATEGORIES } from '../utils/formats';
 import { ToolType } from '../types';
@@ -17,6 +18,10 @@ interface HeaderProps {
   onSignupClick: () => void;
   onLogoutClick: () => void;
   onHomeClick: () => void;
+  onAboutClick: () => void;
+  onPrivacyClick: () => void;
+  onTermsClick: () => void;
+  onPromoteClick: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({ 
@@ -27,16 +32,29 @@ const Header: React.FC<HeaderProps> = ({
   onLoginClick, 
   onSignupClick, 
   onLogoutClick,
-  onHomeClick
+  onHomeClick,
+  onAboutClick,
+  onPrivacyClick,
+  onTermsClick,
+  onPromoteClick
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setIsMegaMenuOpen(true);
+  };
+
+  const handleResourcesEnter = () => {
+    setResourcesOpen(true);
+  };
+
+  const handleResourcesLeave = () => {
+    setResourcesOpen(false);
   };
 
   const handleMouseLeave = () => {
@@ -85,19 +103,53 @@ const Header: React.FC<HeaderProps> = ({
                         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-primary-500' : 'text-slate-400'}`} />
                     </div>
                 </div>
+                
+                {/* Resources Dropdown */}
+                <div 
+                    className="relative px-4 py-2 rounded-full cursor-pointer transition-all hover:bg-white hover:shadow-sm group"
+                    onMouseEnter={handleResourcesEnter}
+                    onMouseLeave={handleResourcesLeave}
+                >
+                    <div className="flex items-center gap-2 text-sm font-bold text-slate-600 group-hover:text-primary-600 transition-colors">
+                        <BookOpen className="w-4 h-4" />
+                        <span>Resources</span>
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-300 ${resourcesOpen ? 'rotate-180 text-primary-500' : 'text-slate-400'}`} />
+                    </div>
+                    
+                    {/* Dropdown Menu */}
+                    <div className={`absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-52 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/50 overflow-hidden z-20 transition-all duration-300 origin-top ${resourcesOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'} ring-1 ring-black/5`}>
+                        <div className="p-1.5">
+                            <button 
+                                onClick={() => { onAboutClick(); setResourcesOpen(false); }}
+                                className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-600 rounded-xl transition-colors"
+                            >
+                                <Info className="w-4 h-4" />
+                                About Us
+                            </button>
+                            <button 
+                                onClick={() => { onPrivacyClick(); setResourcesOpen(false); }}
+                                className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-600 rounded-xl transition-colors"
+                            >
+                                <ShieldCheck className="w-4 h-4" />
+                                Privacy Policy
+                            </button>
+                            <button 
+                                onClick={() => { onTermsClick(); setResourcesOpen(false); }}
+                                className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-600 rounded-xl transition-colors"
+                            >
+                                <FileText className="w-4 h-4" />
+                                Terms & Conditions
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                {/* Quick Links */}
                 <button 
-                    onClick={() => onTabChange('optimizer')}
-                    className="px-4 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-primary-600 hover:bg-white hover:shadow-sm transition-all"
+                    onClick={onPromoteClick}
+                    className="px-4 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-primary-600 hover:bg-white hover:shadow-sm transition-all flex items-center gap-2"
                 >
-                    SVG Optimizer
-                </button>
-                <button 
-                    onClick={() => onTabChange('image-compressor')}
-                    className="px-4 py-2 rounded-full text-sm font-bold text-slate-600 hover:text-primary-600 hover:bg-white hover:shadow-sm transition-all"
-                >
-                    Compressor
+                    <Rocket className="w-4 h-4" />
+                    <span>Promote App</span>
                 </button>
             </div>
           </nav>
@@ -194,21 +246,41 @@ const Header: React.FC<HeaderProps> = ({
                             <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center mb-4 text-primary-600 relative z-10">
                                 <Sparkles className="w-5 h-5" />
                             </div>
-                            <h3 className="text-lg font-black text-slate-900 mb-2 relative z-10">AI-Powered<br/>Tools</h3>
+                            <h3 className="text-lg font-black text-slate-900 mb-2 relative z-10">Popular<br/>Tools</h3>
                             <p className="text-sm text-slate-500 leading-relaxed mb-6 relative z-10">
-                                Secure, client-side conversion for all your needs. No server uploads, ever.
+                                Secure, client-side conversion. No server uploads.
                             </p>
                         </div>
                         
-                        <button 
-                            onClick={() => {
-                                onTabChange('image-compressor');
-                                setIsMegaMenuOpen(false);
-                            }}
-                            className="relative z-10 w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
-                        >
-                            Try Compressor <ArrowRight className="w-4 h-4" />
-                        </button>
+                        <div className="space-y-2 relative z-10">
+                            <button 
+                                onClick={() => {
+                                    onTabChange('image-compressor');
+                                    setIsMegaMenuOpen(false);
+                                }}
+                                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg hover:bg-slate-800 transition-all flex items-center justify-center gap-2"
+                            >
+                                <ImageIcon className="w-4 h-4" /> Compressor
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    onTabChange('bg-remover');
+                                    setIsMegaMenuOpen(false);
+                                }}
+                                className="w-full py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Eraser className="w-4 h-4" /> BG Remover
+                            </button>
+                            <button 
+                                onClick={() => {
+                                    onTabChange('optimizer');
+                                    setIsMegaMenuOpen(false);
+                                }}
+                                className="w-full py-2.5 bg-white text-slate-700 border border-slate-200 rounded-xl text-sm font-bold shadow-sm hover:border-primary-300 hover:text-primary-600 transition-all flex items-center justify-center gap-2"
+                            >
+                                <Layers className="w-4 h-4" /> SVG Optimizer
+                            </button>
+                        </div>
                     </div>
 
                     {/* Right Columns: Categories */}
@@ -222,7 +294,7 @@ const Header: React.FC<HeaderProps> = ({
                                         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">{category.title}</h4>
                                     </div>
                                     <ul className="space-y-1">
-                                        {category.items.map((item) => (
+                                        {category.items.filter(item => item.id !== 'bg-remover').map((item) => (
                                             <li key={item.id}>
                                                 <button
                                                     onClick={() => {
@@ -278,6 +350,38 @@ const Header: React.FC<HeaderProps> = ({
                             className="w-full text-left px-4 py-3 bg-slate-900 text-white rounded-xl font-bold mb-4 shadow-lg flex items-center gap-2"
                         >
                             <Zap className="w-4 h-4" /> Home
+                        </button>
+                        
+                        <div className="px-4 py-2">
+                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Resources</div>
+                            <button 
+                                onClick={() => { onAboutClick(); setMobileMenuOpen(false); }}
+                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                            >
+                                <Info className="w-4 h-4" /> About Us
+                            </button>
+                            <button 
+                                onClick={() => { onPrivacyClick(); setMobileMenuOpen(false); }}
+                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                            >
+                                <ShieldCheck className="w-4 h-4" /> Privacy Policy
+                            </button>
+                            <button 
+                                onClick={() => { onTermsClick(); setMobileMenuOpen(false); }}
+                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                            >
+                                <FileText className="w-4 h-4" /> Terms & Conditions
+                            </button>
+                        </div>
+
+                        <button 
+                            onClick={() => {
+                                onPromoteClick();
+                                setMobileMenuOpen(false);
+                            }}
+                            className="w-full text-left px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl font-bold mt-2 flex items-center gap-2 transition-colors"
+                        >
+                            <Rocket className="w-4 h-4" /> Promote App
                         </button>
                     </div>
 
