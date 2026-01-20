@@ -349,4 +349,4 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ activeTab, settings, onCh
   );
 };
 
-export default SettingsPanel;
+export default React.memo(SettingsPanel);

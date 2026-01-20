@@ -63,4 +63,4 @@ const Footer: React.FC<FooterProps> = ({ onPrivacyClick, onTermsClick, onAboutCl
     );
 };
 
-export default Footer;
+export default React.memo(Footer);

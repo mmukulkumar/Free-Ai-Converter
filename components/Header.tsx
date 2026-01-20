@@ -42,7 +42,12 @@ const Header: React.FC<HeaderProps> = ({
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [mobileCategoryOpen, setMobileCategoryOpen] = useState<string | null>(null);
   const timeoutRef = useRef<number | null>(null);
+
+  const toggleMobileCategory = (title: string) => {
+    setMobileCategoryOpen(mobileCategoryOpen === title ? null : title);
+  };
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -325,7 +330,16 @@ const Header: React.FC<HeaderProps> = ({
             <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)}></div>
             <div className="absolute right-0 top-0 h-[100dvh] w-[85%] max-w-[320px] bg-white shadow-2xl flex flex-col animate-fade-in-right">
                 <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white">
-                    <span className="font-black text-xl text-slate-800 tracking-tight">Menu</span>
+                    <div 
+                        className="flex items-center gap-2 cursor-pointer" 
+                        onClick={() => {
+                            onHomeClick();
+                            setMobileMenuOpen(false);
+                        }}
+                    >
+                        <div className="p-1.5 bg-primary-50 rounded-lg"><Zap className="w-5 h-5 text-primary-600" fill="currentColor" /></div>
+                        <span className="font-black text-lg text-slate-900 tracking-tight">FreeAI</span>
+                    </div>
                     <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
                         <X className="w-6 h-6" />
                     </button>
@@ -341,72 +355,76 @@ const Header: React.FC<HeaderProps> = ({
                         <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     </div>
 
-                    <div className="mb-6">
-                        <button 
-                            onClick={() => {
-                                onHomeClick();
-                                setMobileMenuOpen(false);
-                            }}
-                            className="w-full text-left px-4 py-3 bg-slate-900 text-white rounded-xl font-bold mb-4 shadow-lg flex items-center gap-2"
-                        >
-                            <Zap className="w-4 h-4" /> Home
-                        </button>
-                        
-                        <div className="px-4 py-2">
-                            <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Resources</div>
-                            <button 
+                    {/* Categories Accordion */}
+                    <div className="space-y-3 mb-6">
+                        {MENU_CATEGORIES.map((category) => (
+                            <div key={category.title} className="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
+                                <button 
+                                    onClick={() => toggleMobileCategory(category.title)}
+                                    className="w-full flex items-center justify-between p-4 text-left hover:bg-slate-50 transition-colors"
+                                >
+                                    <span className="text-sm font-bold text-slate-800 flex items-center gap-3">
+                                        {React.createElement(getCategoryIcon(category.title), { className: "w-4 h-4 text-primary-500" })}
+                                        {category.title}
+                                    </span>
+                                    <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileCategoryOpen === category.title ? 'rotate-180' : ''}`} />
+                                </button>
+                                
+                                {mobileCategoryOpen === category.title && (
+                                    <div className="px-2 pb-2 pt-0 bg-slate-50/50 border-t border-slate-100">
+                                        {category.items.map((item) => (
+                                            <button
+                                                key={item.label}
+                                                onClick={() => {
+                                                    onTabChange(item.id);
+                                                    setMobileMenuOpen(false);
+                                                }}
+                                                className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${activeTab === item.id ? 'text-primary-700 bg-primary-50/50' : 'text-slate-600 hover:text-primary-600'}`}
+                                            >
+                                                {item.label}
+                                                {activeTab === item.id && <div className="w-1.5 h-1.5 rounded-full bg-primary-500"></div>}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <button 
+                        onClick={() => {
+                            onPromoteClick();
+                            setMobileMenuOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-3 bg-white border border-slate-200 text-slate-700 hover:border-primary-300 hover:text-primary-600 rounded-xl font-bold mb-6 shadow-sm flex items-center gap-3 transition-all"
+                    >
+                        <Rocket className="w-4 h-4 text-slate-400" /> Promote App
+                    </button>
+
+                    {/* Resources at Bottom */}
+                    <div className="mb-2">
+                        <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-2">Resources</div>
+                        <div className="bg-white rounded-xl border border-slate-100 overflow-hidden shadow-sm">
+                             <button 
                                 onClick={() => { onAboutClick(); setMobileMenuOpen(false); }}
-                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-4 py-3 text-slate-600 hover:bg-slate-50 font-medium flex items-center gap-3 border-b border-slate-50 transition-colors"
                             >
-                                <Info className="w-4 h-4" /> About Us
+                                <Info className="w-4 h-4 text-slate-400" /> About Us
                             </button>
                             <button 
                                 onClick={() => { onPrivacyClick(); setMobileMenuOpen(false); }}
-                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-4 py-3 text-slate-600 hover:bg-slate-50 font-medium flex items-center gap-3 border-b border-slate-50 transition-colors"
                             >
-                                <ShieldCheck className="w-4 h-4" /> Privacy Policy
+                                <ShieldCheck className="w-4 h-4 text-slate-400" /> Privacy Policy
                             </button>
                             <button 
                                 onClick={() => { onTermsClick(); setMobileMenuOpen(false); }}
-                                className="w-full text-left px-4 py-2 text-slate-600 hover:bg-slate-50 rounded-lg font-medium mb-1 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-4 py-3 text-slate-600 hover:bg-slate-50 font-medium flex items-center gap-3 transition-colors"
                             >
-                                <FileText className="w-4 h-4" /> Terms & Conditions
+                                <FileText className="w-4 h-4 text-slate-400" /> Terms & Conditions
                             </button>
                         </div>
-
-                        <button 
-                            onClick={() => {
-                                onPromoteClick();
-                                setMobileMenuOpen(false);
-                            }}
-                            className="w-full text-left px-4 py-3 text-slate-600 hover:bg-slate-50 rounded-xl font-bold mt-2 flex items-center gap-2 transition-colors"
-                        >
-                            <Rocket className="w-4 h-4" /> Promote App
-                        </button>
                     </div>
-
-                    {MENU_CATEGORIES.map((category) => (
-                        <div key={category.title} className="mb-6 bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                            <h3 className="text-xs font-bold text-primary-600 uppercase tracking-wider mb-3 flex items-center gap-2">
-                                {React.createElement(getCategoryIcon(category.title), { className: "w-3 h-3" })}
-                                {category.title}
-                            </h3>
-                            <div className="space-y-1">
-                                {category.items.map((item) => (
-                                    <button
-                                        key={item.label}
-                                        onClick={() => {
-                                            onTabChange(item.id);
-                                            setMobileMenuOpen(false);
-                                        }}
-                                        className={`w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold transition-colors ${activeTab === item.id ? 'bg-primary-50 text-primary-700' : 'text-slate-600 hover:bg-slate-50'}`}
-                                    >
-                                        {item.label}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
                 </div>
 
                 <div className="p-5 border-t border-slate-100 bg-white space-y-3">
@@ -474,4 +492,4 @@ const getCategoryIcon = (title: string) => {
     }
 }
 
-export default Header;
+export default React.memo(Header);

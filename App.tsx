@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense, useMemo } from 'react';
 import { Loader2, Check, Zap } from 'lucide-react';
 import DropZone from './components/DropZone';
 import FileList from './components/FileList';
@@ -7,21 +7,21 @@ import InfoSection from './components/InfoSection';
 import ToolSelector from './components/ToolSelector';
 import SettingsPanel from './components/SettingsPanel';
 import Header from './components/Header';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import LimitModal from './components/LimitModal';
-import Privacy from './components/Privacy';
-import Terms from './components/Terms';
-import PromoteApp from './components/PromoteApp';
-import AboutUs from './components/AboutUs';
 import Footer from './components/Footer';
 import AnimatedTitle from './components/AnimatedTitle';
 import GridLoader from './components/GridLoader';
 import Landing from './components/Landing';
-import { convertFile } from './utils/converters';
 import { formatBytes } from './utils/optimizer';
 import { OptimizedFile, ToolType, OptimizerSettings } from './types';
 import { ALL_TABS } from './utils/formats';
+
+const Login = lazy(() => import('./components/Login'));
+const Signup = lazy(() => import('./components/Signup'));
+const LimitModal = lazy(() => import('./components/LimitModal'));
+const Privacy = lazy(() => import('./components/Privacy'));
+const Terms = lazy(() => import('./components/Terms'));
+const PromoteApp = lazy(() => import('./components/PromoteApp'));
+const AboutUs = lazy(() => import('./components/AboutUs'));
 
 const FREE_LIMIT = 20;
 
@@ -88,7 +88,7 @@ const App: React.FC = () => {
   }, []);
 
   // Configure accepted files based on active tool
-  const getAcceptedExtensions = (tool: ToolType): string[] => {
+  const getAcceptedExtensions = useCallback((tool: ToolType): string[] => {
     if (tool === 'image-compressor' || tool === 'bg-remover') {
         return ['.jpg', '.jpeg', '.png', '.webp', '.bmp', '.gif', '.heic', '.heif'];
     }
@@ -98,38 +98,50 @@ const App: React.FC = () => {
         return [`.${parts[0]}`];
     }
     return ['.svg']; // Default fallback
-  };
+  }, []);
 
-  const handleTabChange = (id: ToolType) => {
+  const acceptedExtensions = useMemo(() => getAcceptedExtensions(activeTab), [activeTab, getAcceptedExtensions]);
+
+  const handleClear = useCallback(() => {
+    setFiles(prev => {
+      prev.forEach(f => {
+        if (f.blobUrl) URL.revokeObjectURL(f.blobUrl);
+        if (f.originalBlobUrl) URL.revokeObjectURL(f.originalBlobUrl);
+      });
+      return [];
+    });
+  }, []);
+
+  const handleTabChange = useCallback((id: ToolType) => {
     setActiveTab(id);
     handleClear(); // Clean up existing files and blobs
     setCurrentView('home'); // Switch to tool view when a tab is selected
-  };
+  }, [handleClear]);
   
-  const handleHomeClick = () => {
+  const handleHomeClick = useCallback(() => {
       setCurrentView('landing');
-  };
+  }, []);
 
   // Auth Handlers
-  const handleLogin = (email: string) => {
+  const handleLogin = useCallback((email: string) => {
       setUser({ name: email.split('@')[0], email });
       setIsAuthenticated(true);
       setCurrentView('landing');
       setShowLimitModal(false);
-  };
+  }, []);
 
-  const handleSignup = (name: string, email: string) => {
+  const handleSignup = useCallback((name: string, email: string) => {
       setUser({ name, email });
       setIsAuthenticated(true);
       setCurrentView('landing');
       setShowLimitModal(false);
-  };
+  }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
       setUser(null);
       setIsAuthenticated(false);
       setCurrentView('landing');
-  };
+  }, []);
 
   // Helper to get extension per file (for compressor) or per tool (for converters)
   const getTargetExtension = (tool: ToolType, fileName: string) => {
@@ -149,7 +161,7 @@ const App: React.FC = () => {
   };
 
   // Handle new files added - add to queue with limit check
-  const handleFilesAdded = (newFiles: File[]) => {
+  const handleFilesAdded = useCallback((newFiles: File[]) => {
     
     // LIMIT CHECK LOGIC
     if (!isAuthenticated) {
@@ -183,13 +195,14 @@ const App: React.FC = () => {
     }));
 
     setFiles(prev => [...prev, ...newOptimizedFiles]);
-  };
+  }, [isAuthenticated, usageCount, activeTab]);
 
   // Process a single file
   const processFile = useCallback(async (id: string, file: File) => {
     setFiles(prev => prev.map(f => f.id === id ? { ...f, status: 'PROCESSING' } : f));
 
     try {
+      const { convertFile } = await import('./utils/converters');
       // Pass the current optimizerSettings to convertFile
       const { content, extension } = await convertFile(file, activeTab, optimizerSettings);
       
@@ -236,7 +249,7 @@ const App: React.FC = () => {
   }, [activeTab, optimizerSettings]);
 
   // NEW: Manual Conversion Trigger
-  const handleConvertFiles = () => {
+  const handleConvertFiles = useCallback(() => {
     const pendingFiles = files.filter(f => f.status === 'PENDING');
     
     // Trigger processing for all pending files
@@ -247,15 +260,7 @@ const App: React.FC = () => {
             processFile(f.id, f.rawFile);
         }
     });
-  };
-
-  const handleClear = () => {
-    files.forEach(f => {
-      if (f.blobUrl) URL.revokeObjectURL(f.blobUrl);
-      if (f.originalBlobUrl) URL.revokeObjectURL(f.originalBlobUrl);
-    });
-    setFiles([]);
-  };
+  }, [files, processFile]);
 
   const completedCount = files.filter(f => f.status === 'COMPLETED').length;
   const pendingCount = files.filter(f => f.status === 'PENDING').length;
@@ -314,40 +319,60 @@ const App: React.FC = () => {
 
   // View Routing
   if (currentView === 'privacy') {
-      return <Privacy onBack={() => setCurrentView('landing')} />;
+      return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <Privacy onBack={() => setCurrentView('landing')} />
+        </Suspense>
+      );
   }
   
   if (currentView === 'promote') {
-      return <PromoteApp onBack={() => setCurrentView('landing')} />;
+      return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <PromoteApp onBack={() => setCurrentView('landing')} />
+        </Suspense>
+      );
   }
 
   if (currentView === 'terms') {
-      return <Terms onBack={() => setCurrentView('landing')} />;
+      return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <Terms onBack={() => setCurrentView('landing')} />
+        </Suspense>
+      );
   }
 
   if (currentView === 'about') {
-      return <AboutUs onBack={() => setCurrentView('landing')} />;
+      return (
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <AboutUs onBack={() => setCurrentView('landing')} />
+        </Suspense>
+      );
   }
 
   if (currentView === 'login') {
       return (
-          <Login 
-            onLogin={handleLogin} 
-            onNavigateSignup={() => setCurrentView('signup')}
-            onBack={() => setCurrentView('landing')} 
-          />
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <Login 
+                onLogin={handleLogin} 
+                onNavigateSignup={() => setCurrentView('signup')}
+                onBack={() => setCurrentView('landing')} 
+            />
+          </Suspense>
       );
   }
 
   if (currentView === 'signup') {
       return (
-          <Signup 
-            onSignup={handleSignup} 
-            onNavigateLogin={() => setCurrentView('login')} 
-            onBack={() => setCurrentView('landing')}
-            onNavigateTerms={() => setCurrentView('terms')}
-            onNavigatePrivacy={() => setCurrentView('privacy')}
-          />
+          <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><GridLoader /></div>}>
+            <Signup 
+                onSignup={handleSignup} 
+                onNavigateLogin={() => setCurrentView('login')} 
+                onBack={() => setCurrentView('landing')}
+                onNavigateTerms={() => setCurrentView('terms')}
+                onNavigatePrivacy={() => setCurrentView('privacy')}
+            />
+          </Suspense>
       );
   }
 
@@ -376,6 +401,7 @@ const App: React.FC = () => {
       />
 
       {/* Limit Modal */}
+      <Suspense fallback={null}>
       {showLimitModal && (
         <LimitModal 
             onClose={() => setShowLimitModal(false)} 
@@ -389,6 +415,7 @@ const App: React.FC = () => {
             }}
         />
       )}
+      </Suspense>
 
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-16 z-10 relative">
         
@@ -435,7 +462,7 @@ const App: React.FC = () => {
                             onFilesAdded={handleFilesAdded} 
                             onClear={handleClear} 
                             hasFiles={files.length > 0} 
-                            acceptedExtensions={getAcceptedExtensions(activeTab)}
+                            acceptedExtensions={acceptedExtensions}
                         />
 
                         {/* 3. CONVERT BUTTON & STATUS */}
