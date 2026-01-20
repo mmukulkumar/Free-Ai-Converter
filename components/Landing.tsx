@@ -27,14 +27,14 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                 v2.0 Now Live with Client-Side Processing
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black text-slate-900 tracking-tight leading-tight mb-8">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-900 tracking-tight leading-tight mb-8">
                 The Secure <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-purple-600">
                      <AnimatedTitle text="AI_Converter" />
                 </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
+            <p className="text-lg md:text-2xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
                 Optimize images, vectorize bitmaps, and convert documents directly in your browser. <strong className="text-slate-700 font-semibold">No server uploads, zero privacy risk.</strong>
             </p>
 

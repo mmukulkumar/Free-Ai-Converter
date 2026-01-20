@@ -322,8 +322,8 @@ const Header: React.FC<HeaderProps> = ({
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[100] lg:hidden">
-            <div className="absolute inset-0 bg-slate-900/20 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)}></div>
-            <div className="absolute right-0 top-0 h-full w-[320px] bg-white shadow-2xl flex flex-col animate-fade-in-right">
+            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setMobileMenuOpen(false)}></div>
+            <div className="absolute right-0 top-0 h-[100dvh] w-[85%] max-w-[320px] bg-white shadow-2xl flex flex-col animate-fade-in-right">
                 <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white">
                     <span className="font-black text-xl text-slate-800 tracking-tight">Menu</span>
                     <button onClick={() => setMobileMenuOpen(false)} className="p-2 hover:bg-slate-100 rounded-full text-slate-500 transition-colors">
@@ -332,13 +332,13 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
                 
                 <div className="flex-1 overflow-y-auto p-4 bg-slate-50/50">
-                    <div className="mb-6">
+                    <div className="mb-6 relative">
                         <input 
                             type="text" 
                             placeholder="Search tools..." 
                             className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary-100 focus:border-primary-300 outline-none"
                         />
-                        <Search className="w-4 h-4 text-slate-400 absolute left-8 top-[100px]" />
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     </div>
 
                     <div className="mb-6">
