@@ -4,7 +4,7 @@ import {
     ChevronDown, Search, Menu, X, Zap, User, LogOut,
     Image as ImageIcon, FileText, Video, Music, Box, Camera,
     Sparkles, Layers, Grid, ArrowRight, Cpu, Eraser,
-    BookOpen, Info, Rocket, ShieldCheck
+    BookOpen, Info, Rocket, ShieldCheck, LayoutDashboard, Shield, Settings
 } from 'lucide-react';
 import { MENU_CATEGORIES } from '../utils/formats';
 import { ToolType } from '../types';
@@ -14,6 +14,7 @@ interface HeaderProps {
     onTabChange: (id: ToolType) => void;
     isAuthenticated: boolean;
     user: { name: string; email: string } | null;
+    isAdmin?: boolean;
     onLoginClick: () => void;
     onSignupClick: () => void;
     onLogoutClick: () => void;
@@ -22,6 +23,8 @@ interface HeaderProps {
     onPrivacyClick: () => void;
     onTermsClick: () => void;
     onPromoteClick: () => void;
+    onDashboardClick?: () => void;
+    onAdminClick?: () => void;
 }
 
 const getToolSlug = (tool: ToolType): string => {
@@ -36,6 +39,7 @@ const Header: React.FC<HeaderProps> = ({
     onTabChange,
     isAuthenticated,
     user,
+    isAdmin = false,
     onLoginClick,
     onSignupClick,
     onLogoutClick,
@@ -43,7 +47,9 @@ const Header: React.FC<HeaderProps> = ({
     onAboutClick,
     onPrivacyClick,
     onTermsClick,
-    onPromoteClick
+    onPromoteClick,
+    onDashboardClick,
+    onAdminClick
 }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -197,7 +203,41 @@ const Header: React.FC<HeaderProps> = ({
                                             <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">Signed in as</p>
                                             <p className="text-sm font-bold text-slate-800 truncate">{user.email}</p>
                                         </div>
-                                        <div className="p-1.5">
+                                        <div className="p-1.5 space-y-0.5">
+                                            <button
+                                                onClick={() => {
+                                                    onDashboardClick?.();
+                                                    setUserDropdownOpen(false);
+                                                }}
+                                                className="w-full flex items-center gap-2 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-primary-50 hover:text-primary-600 rounded-lg transition-colors"
+                                            >
+                                                <LayoutDashboard className="w-4 h-4" />
+                                                My Dashboard
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    onDashboardClick?.();
+                                                    setUserDropdownOpen(false);
+                                                }}
+                                                className="w-full flex items-center gap-2 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                                            >
+                                                <Settings className="w-4 h-4" />
+                                                Settings
+                                            </button>
+                                            {isAdmin && (
+                                                <button
+                                                    onClick={() => {
+                                                        onAdminClick?.();
+                                                        setUserDropdownOpen(false);
+                                                    }}
+                                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                                >
+                                                    <Shield className="w-4 h-4" />
+                                                    Admin Dashboard
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div className="p-1.5 border-t border-slate-100">
                                             <button
                                                 onClick={() => {
                                                     onLogoutClick();

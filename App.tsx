@@ -82,10 +82,19 @@ const getSeoMetadata = (view: ViewState, tool: ToolType) => {
 };
 
 const App: React.FC = () => {
-  // App Routing & Auth State
+  // Get auth state from context
+  const { user: authUser, profile, session, isLoading: authLoading, signOut } = useAuth();
+
+  // Derive isAuthenticated and user from auth context
+  const isAuthenticated = !!session;
+  const user: UserState = authUser ? {
+    name: profile?.full_name || authUser.email?.split('@')[0] || 'User',
+    email: authUser.email || ''
+  } : null;
+  const isAdmin = profile?.role === 'admin';
+
+  // App Routing State
   const [currentView, setCurrentView] = useState<ViewState>('landing');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<UserState>(null);
   const [usageCount, setUsageCount] = useState(0);
   const [showLimitModal, setShowLimitModal] = useState(false);
 
@@ -245,26 +254,23 @@ const App: React.FC = () => {
     setCurrentView('landing');
   }, []);
 
-  // Auth Handlers
-  const handleLogin = useCallback((email: string) => {
-    setUser({ name: email.split('@')[0], email });
-    setIsAuthenticated(true);
+  // Auth Handlers - Auth state is now managed by AuthContext
+  const handleLogin = useCallback((_email: string) => {
+    // Auth state is managed by AuthContext, just navigate
     setCurrentView('landing');
     setShowLimitModal(false);
   }, []);
 
-  const handleSignup = useCallback((name: string, email: string) => {
-    setUser({ name, email });
-    setIsAuthenticated(true);
+  const handleSignup = useCallback((_name: string, _email: string) => {
+    // Auth state is managed by AuthContext, just navigate  
     setCurrentView('landing');
     setShowLimitModal(false);
   }, []);
 
-  const handleLogout = useCallback(() => {
-    setUser(null);
-    setIsAuthenticated(false);
+  const handleLogout = useCallback(async () => {
+    await signOut();
     setCurrentView('landing');
-  }, []);
+  }, [signOut]);
 
   // Helper to get extension per file (for compressor) or per tool (for converters)
   const getTargetExtension = (tool: ToolType, fileName: string) => {
@@ -534,6 +540,7 @@ const App: React.FC = () => {
         onTabChange={handleTabChange}
         isAuthenticated={isAuthenticated}
         user={user}
+        isAdmin={isAdmin}
         onLoginClick={() => setCurrentView('login')}
         onSignupClick={() => setCurrentView('signup')}
         onLogoutClick={handleLogout}
@@ -542,6 +549,8 @@ const App: React.FC = () => {
         onPrivacyClick={() => setCurrentView('privacy')}
         onTermsClick={() => setCurrentView('terms')}
         onPromoteClick={() => setCurrentView('promote')}
+        onDashboardClick={() => setCurrentView('dashboard')}
+        onAdminClick={() => setCurrentView('admin')}
       />
 
       {/* Limit Modal */}
@@ -582,7 +591,7 @@ const App: React.FC = () => {
         )}
       </Suspense>
 
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-16 z-10 relative">
+      <main className={`flex-1 w-full z-10 relative ${currentView === 'landing' ? '' : 'max-w-6xl mx-auto px-4 py-8 md:py-16'}`}>
 
         {currentView === 'landing' ? (
           <Landing onNavigate={handleTabChange} />

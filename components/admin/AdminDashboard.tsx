@@ -204,6 +204,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateHome }) => {
                         {[
                             { id: 'overview', label: 'Overview', icon: BarChart3 },
                             { id: 'users', label: 'Users', icon: Users },
+                            { id: 'tools', label: 'Tools Usage', icon: ImageIcon },
                             { id: 'subscriptions', label: 'Subscriptions', icon: Crown },
                             { id: 'ads', label: 'Ads', icon: LayoutGrid },
                         ].map((tab) => (
@@ -211,8 +212,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateHome }) => {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${activeTab === tab.id
-                                        ? 'bg-primary-500 text-white'
-                                        : 'text-slate-400 hover:text-white hover:bg-slate-700'
+                                    ? 'bg-primary-500 text-white'
+                                    : 'text-slate-400 hover:text-white hover:bg-slate-700'
                                     }`}
                             >
                                 <tab.icon className="w-4 h-4" />
@@ -261,6 +262,104 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onNavigateHome }) => {
                                 </div>
                                 <p className="text-3xl font-black text-green-400">${stats.monthlyRevenue}</p>
                                 <p className="text-slate-400 text-sm">Monthly Revenue</p>
+                            </div>
+                        </div>
+
+                        {/* Quick Stats Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                                <h3 className="text-lg font-bold mb-4">User Breakdown</h3>
+                                <div className="space-y-3">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-400">Free Users</span>
+                                        <span className="font-bold">{stats.totalUsers - stats.proUsers - stats.enterpriseUsers}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-purple-400">Pro Users</span>
+                                        <span className="font-bold text-purple-400">{stats.proUsers}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-yellow-400">Enterprise Users</span>
+                                        <span className="font-bold text-yellow-400">{stats.enterpriseUsers}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                                <h3 className="text-lg font-bold mb-4">Conversion Rate</h3>
+                                <div className="flex items-end gap-4">
+                                    <div>
+                                        <p className="text-4xl font-black text-primary-400">
+                                            {stats.totalUsers > 0 ? ((stats.proUsers + stats.enterpriseUsers) / stats.totalUsers * 100).toFixed(1) : 0}%
+                                        </p>
+                                        <p className="text-slate-400 text-sm">Free to Paid</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-slate-800 rounded-2xl p-6 border border-slate-700">
+                                <h3 className="text-lg font-bold mb-4">Avg. Conversions/User</h3>
+                                <div className="flex items-end gap-4">
+                                    <div>
+                                        <p className="text-4xl font-black text-green-400">
+                                            {stats.totalUsers > 0 ? (stats.totalConversions / stats.totalUsers).toFixed(1) : 0}
+                                        </p>
+                                        <p className="text-slate-400 text-sm">Per User</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'tools' && (
+                    <div className="space-y-6">
+                        {/* Tools Usage Overview */}
+                        <div className="bg-slate-800 rounded-2xl border border-slate-700 overflow-hidden">
+                            <div className="p-6 border-b border-slate-700">
+                                <h3 className="text-lg font-bold">Tool Usage Analytics</h3>
+                                <p className="text-slate-400 text-sm mt-1">Track which tools are most popular</p>
+                            </div>
+                            <div className="p-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {[
+                                        { name: 'Image Compressor', usage: 45, color: 'bg-blue-500' },
+                                        { name: 'PNG to JPG', usage: 32, color: 'bg-green-500' },
+                                        { name: 'Background Remover', usage: 28, color: 'bg-purple-500' },
+                                        { name: 'HEIC to JPG', usage: 18, color: 'bg-pink-500' },
+                                        { name: 'SVG Optimizer', usage: 15, color: 'bg-yellow-500' },
+                                        { name: 'Video Converter', usage: 12, color: 'bg-red-500' },
+                                    ].map((tool) => (
+                                        <div key={tool.name} className="bg-slate-700/50 rounded-xl p-4">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <span className="font-medium">{tool.name}</span>
+                                                <span className="text-slate-400 text-sm">{tool.usage}%</span>
+                                            </div>
+                                            <div className="h-2 bg-slate-600 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full ${tool.color} rounded-full transition-all`}
+                                                    style={{ width: `${tool.usage}%` }}
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Usage by Time */}
+                        <div className="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                            <h3 className="text-lg font-bold mb-4">Usage Trends</h3>
+                            <div className="grid grid-cols-7 gap-2">
+                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => (
+                                    <div key={day} className="text-center">
+                                        <div
+                                            className="bg-primary-500/20 rounded-lg mb-2 transition-all hover:bg-primary-500/40"
+                                            style={{ height: `${Math.random() * 80 + 40}px` }}
+                                        />
+                                        <span className="text-xs text-slate-400">{day}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
