@@ -36,6 +36,40 @@ export interface RasterOptions {
   grayscale: boolean;
 }
 
+// Image Tool Specific Options
+export interface ResizeOptions {
+  width: number;
+  height: number;
+  maintainAspect: boolean;
+  fit: 'contain' | 'cover' | 'fill';
+}
+
+export interface RotateOptions {
+  degrees: 0 | 90 | 180 | 270;
+}
+
+export interface CropOptions {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface WatermarkOptions {
+  text: string;
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'center';
+  fontSize: number;
+  opacity: number;
+  color: string;
+}
+
+export interface ImageToolOptions {
+  resize?: ResizeOptions;
+  rotate?: RotateOptions;
+  crop?: CropOptions;
+  watermark?: WatermarkOptions;
+}
+
 export interface OptimizerSettings {
   // SVG Specific
   level: 'low' | 'medium' | 'high';
@@ -43,10 +77,13 @@ export interface OptimizerSettings {
   removeComments: boolean;
   removeMetadata: boolean; // Applies to both SVG and Raster
   mergePaths: boolean;
-  
+
   // PDF Specific
   pdfOptions: PdfPageOptions;
 
   // Raster Specific (JPG, PNG, WEBP)
   rasterOptions: RasterOptions;
+
+  // Image Tool Options (Resize, Rotate, Crop, Watermark)
+  imageToolOptions?: ImageToolOptions;
 }
