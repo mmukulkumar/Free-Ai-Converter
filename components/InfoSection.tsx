@@ -94,30 +94,6 @@ const InfoSection: React.FC<InfoSectionProps> = ({ tool, onNavigatePrivacy, onNa
                     </p>
                 </div>
             </div>
-
-            {/* Footer Note */}
-            <div className="mt-16 border-t border-slate-200 pt-8 pb-12">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-                    <div className="flex items-center gap-2">
-                        <Lock className="w-3 h-3" />
-                        <p>&copy; {new Date().getFullYear()} Free AI Converter. Secure Client-Side Processing.</p>
-                    </div>
-                    <div className="flex items-center gap-6 font-medium">
-                        <button
-                            onClick={onNavigatePrivacy}
-                            className="hover:text-primary-600 transition-colors"
-                        >
-                            Privacy Policy
-                        </button>
-                        <button
-                            onClick={onNavigateTerms}
-                            className="hover:text-primary-600 transition-colors"
-                        >
-                            Terms & Conditions
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     );
 };
