@@ -68,18 +68,18 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ activeTab, settings, onCh
     const watermarkOpts = settings.imageToolOptions?.watermark || { text: 'Watermark', position: 'bottom-right' as const, fontSize: 24, opacity: 0.5, color: '#ffffff' };
 
     return (
-        <div className="bg-white border-b border-slate-200 animate-fade-in rounded-xl shadow-sm border mb-6 overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-white/5 animate-fade-in rounded-xl shadow-sm border mb-6 overflow-hidden">
 
             {/* --- PROMINENT COMPRESSION CONTROLS (ALWAYS VISIBLE) --- */}
-            <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white">
+            <div className="px-6 py-5 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800/50 dark:to-slate-900/50">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center gap-2 mb-2 md:mb-0">
-                        <div className="p-2 bg-primary-100 text-primary-600 rounded-lg">
+                        <div className="p-2 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-lg">
                             <Gauge className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wide">Compression Level</h3>
-                            <p className="text-xs text-slate-500">Balance between file size and quality</p>
+                            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Compression Level</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Balance between file size and quality</p>
                         </div>
                     </div>
 
@@ -87,14 +87,14 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ activeTab, settings, onCh
                         {isSvgOutput ? (
                             // SVG CONTROLS
                             <div className="flex items-center gap-3">
-                                <div className="flex bg-slate-100 rounded-lg p-1 border border-slate-200 w-full">
+                                <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-1 border border-slate-200 dark:border-white/10 w-full">
                                     {(['low', 'medium', 'high'] as const).map((level) => (
                                         <button
                                             key={level}
                                             onClick={() => handleSvgChange('level', level)}
                                             className={`flex-1 py-2 px-4 rounded-md text-sm font-bold transition-all capitalize ${settings.level === level
-                                                ? 'bg-white text-primary-600 shadow-md ring-1 ring-black/5'
-                                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                                                ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-md ring-1 ring-black/5 dark:ring-white/5'
+                                                : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50'
                                                 }`}
                                         >
                                             {level}
@@ -238,8 +238,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ activeTab, settings, onCh
                                         key={deg}
                                         onClick={() => updateImageToolOption('rotate', 'degrees', deg)}
                                         className={`flex-1 py-3 px-4 rounded-md text-sm font-bold transition-all ${rotateOpts.degrees === deg
-                                                ? 'bg-white text-primary-600 shadow-md ring-1 ring-black/5'
-                                                : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+                                            ? 'bg-white text-primary-600 shadow-md ring-1 ring-black/5'
+                                            : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
                                             }`}
                                     >
                                         {deg}°
@@ -360,7 +360,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ activeTab, settings, onCh
             {/* --- ADVANCED TOGGLE --- */}
             <button
                 onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-primary-600 hover:bg-slate-50 border-t border-slate-100 transition-colors"
+                className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 border-t border-slate-100 dark:border-white/5 transition-colors"
             >
                 <Settings2 className="w-3.5 h-3.5" />
                 <span>{isAdvancedOpen ? 'Hide' : 'Show'} Advanced Settings</span>

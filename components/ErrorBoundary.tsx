@@ -12,11 +12,14 @@ interface State {
 }
 
 class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-    error: null,
-    errorInfo: null
-  };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null
+    };
+  }
 
   public static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error, errorInfo: null };
@@ -43,15 +46,15 @@ class ErrorBoundary extends Component<Props, State> {
             <p className="text-slate-500 mb-6 leading-relaxed">
               Our automated troubleshooter caught an unexpected error.
             </p>
-            
+
             {this.state.error && (
-                <div className="bg-slate-100 p-4 rounded-xl text-left mb-6 overflow-auto max-h-40 text-xs font-mono text-slate-600 border border-slate-200">
-                    <p className="font-bold text-red-500 mb-1">{this.state.error.toString()}</p>
-                    {this.state.errorInfo && <pre>{this.state.errorInfo.componentStack}</pre>}
-                </div>
+              <div className="bg-slate-100 p-4 rounded-xl text-left mb-6 overflow-auto max-h-40 text-xs font-mono text-slate-600 border border-slate-200">
+                <p className="font-bold text-red-500 mb-1">{this.state.error.toString()}</p>
+                {this.state.errorInfo && <pre>{this.state.errorInfo.componentStack}</pre>}
+              </div>
             )}
 
-            <button 
+            <button
               onClick={this.handleReload}
               className="w-full py-3.5 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-slate-900/20"
             >

@@ -126,7 +126,7 @@ const FaqSection: React.FC = () => {
 
                 <div className="grid gap-12">
                     {categories.map((category, catIndex) => (
-                        <div key={catIndex} className="bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 md:p-8 backdrop-blur-sm transition-colors duration-500">
+                        <div key={catIndex} className="bg-white/80 dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 rounded-3xl p-6 md:p-8 backdrop-blur-sm transition-colors duration-500 shadow-sm dark:shadow-none">
                             <div className="flex items-center gap-3 mb-8">
                                 <div className="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20">
                                     <category.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />

@@ -66,17 +66,17 @@ const FileItem: React.FC<{ file: OptimizedFile; onPreview: (file: OptimizedFile)
   };
 
   return (
-    <div className="group bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between transition-all duration-300 hover:shadow-md hover:border-primary-100">
+    <div className="group bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-white/5 flex items-center justify-between transition-all duration-300 hover:shadow-md dark:shadow-none hover:border-primary-100 dark:hover:border-primary-500/30">
       <div className="flex items-center space-x-4 overflow-hidden flex-1">
         {/* Icon/Preview */}
         <div
           onClick={() => file.status === 'COMPLETED' && onPreview(file)}
-          className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center transition-all overflow-hidden border border-slate-100 ${file.status === 'COMPLETED' ? 'bg-slate-50 cursor-pointer hover:opacity-80' : 'bg-slate-50'}`}
+          className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center transition-all overflow-hidden border border-slate-100 dark:border-white/10 ${file.status === 'COMPLETED' ? 'bg-slate-50 dark:bg-slate-900 cursor-pointer hover:opacity-80' : 'bg-slate-50 dark:bg-slate-900'}`}
         >
           {file.status === 'COMPLETED' && file.blobUrl ? (
             <img src={file.blobUrl} alt="preview" className="w-full h-full object-cover" />
           ) : (
-            <FileCode className="w-6 h-6 text-slate-400" />
+            <FileCode className="w-6 h-6 text-slate-400 dark:text-slate-500" />
           )}
         </div>
 
@@ -108,7 +108,7 @@ const FileItem: React.FC<{ file: OptimizedFile; onPreview: (file: OptimizedFile)
               <div className="flex items-center group/name overflow-hidden">
                 <p
                   onClick={() => file.status === 'COMPLETED' && onPreview(file)}
-                  className={`text-sm font-semibold text-slate-700 truncate ${file.status === 'COMPLETED' ? 'cursor-pointer hover:text-primary-600 hover:underline decoration-dashed underline-offset-2' : ''}`}
+                  className={`text-sm font-semibold text-slate-700 dark:text-white truncate ${file.status === 'COMPLETED' ? 'cursor-pointer hover:text-primary-600 dark:hover:text-primary-400 hover:underline decoration-dashed underline-offset-2' : ''}`}
                   title={getDownloadName()}
                 >
                   {baseName}.{file.outputExtension}
@@ -154,10 +154,10 @@ const FileItem: React.FC<{ file: OptimizedFile; onPreview: (file: OptimizedFile)
 
             {file.status === 'COMPLETED' && (
               <div className="flex items-center space-x-2 animate-fade-in">
-                <span className="text-slate-400 line-through decoration-slate-300">{formatBytes(file.originalSize)}</span>
-                <ArrowRight className="w-3 h-3 text-slate-300" />
-                <span className="text-slate-700 font-bold">{formatBytes(file.optimizedSize)}</span>
-                <span className="bg-emerald-50 text-emerald-600 border border-emerald-100 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                <span className="text-slate-400 dark:text-slate-500 line-through decoration-slate-300 dark:decoration-slate-700">{formatBytes(file.originalSize)}</span>
+                <ArrowRight className="w-3 h-3 text-slate-300 dark:text-slate-600" />
+                <span className="text-slate-700 dark:text-slate-200 font-bold">{formatBytes(file.optimizedSize)}</span>
+                <span className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-500/20 px-1.5 py-0.5 rounded text-[10px] font-bold">
                   -{calculateSavings(file.originalSize, file.optimizedSize)}
                 </span>
               </div>

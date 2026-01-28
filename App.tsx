@@ -406,20 +406,20 @@ const App: React.FC = () => {
     if (activeTab === 'image-compressor') {
       return (
         <div className="flex flex-col items-center">
-          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
-            Image <span className="text-primary-600">Compressor</span>
+          <span className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
+            Image <span className="text-primary-600 dark:text-primary-400">Compressor</span>
           </span>
-          <span className="text-lg text-slate-500 font-medium">Reduce file size while maintaining quality</span>
+          <span className="text-lg text-slate-600 dark:text-slate-400 font-medium">Reduce file size while maintaining quality</span>
         </div>
       );
     }
     if (activeTab === 'bg-remover') {
       return (
         <div className="flex flex-col items-center">
-          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
-            Background <span className="text-primary-600">Remover</span>
+          <span className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
+            Background <span className="text-primary-600 dark:text-primary-400">Remover</span>
           </span>
-          <span className="text-lg text-slate-500 font-medium">Remove image backgrounds automatically with AI</span>
+          <span className="text-lg text-slate-600 dark:text-slate-400 font-medium">Remove image backgrounds automatically with AI</span>
         </div>
       );
     }
@@ -427,19 +427,19 @@ const App: React.FC = () => {
     if (parts.length === 2) {
       return (
         <div className="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
-          <span className="text-3xl md:text-5xl font-black text-slate-800 uppercase tracking-tight">{parts[0]}</span>
-          <span className="text-xl md:text-2xl font-medium text-slate-400">to</span>
-          <span className="text-3xl md:text-5xl font-black text-primary-600 uppercase tracking-tight">{parts[1]}</span>
-          <span className="w-full text-center text-lg text-slate-500 font-medium mt-2">Converter</span>
+          <span className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tight">{parts[0]}</span>
+          <span className="text-xl md:text-2xl font-medium text-slate-400 dark:text-slate-500">to</span>
+          <span className="text-3xl md:text-5xl font-black text-primary-600 dark:text-primary-400 uppercase tracking-tight">{parts[1]}</span>
+          <span className="w-full text-center text-lg text-slate-600 dark:text-slate-400 font-medium mt-2">Converter</span>
         </div>
       );
     }
     return (
       <div className="flex flex-col items-center">
-        <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
-          SVG <span className="text-primary-600">Optimizer</span>
+        <span className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
+          SVG <span className="text-primary-600 dark:text-primary-400">Optimizer</span>
         </span>
-        <span className="text-lg text-slate-500 font-medium">Compress vectors without quality loss</span>
+        <span className="text-lg text-slate-600 dark:text-slate-400 font-medium">Compress vectors without quality loss</span>
       </div>
     );
   };
@@ -525,11 +525,11 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-x-hidden font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col relative overflow-x-hidden font-sans transition-colors duration-500">
       {/* Background Decorative Blobs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-100 blur-[120px] opacity-40"></div>
-        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[40%] rounded-full bg-blue-100 blur-[100px] opacity-40"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary-100 dark:bg-primary-900/10 blur-[120px] opacity-40"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[40%] rounded-full bg-blue-100 dark:bg-blue-900/10 blur-[100px] opacity-40"></div>
       </div>
 
       {/* Header */}
@@ -611,18 +611,18 @@ const App: React.FC = () => {
               <div className="mb-6 flex justify-center">
                 {getHeroTitle()}
               </div>
-              <p className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+              <p className="text-slate-600 dark:text-slate-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
                 Secure, client-side processing. Files never leave your browser.
               </p>
               {!isAuthenticated && (
-                <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full border border-slate-200 text-xs font-semibold text-slate-500">
+                <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-white/10 text-xs font-semibold text-slate-600 dark:text-slate-400">
                   <span>Free Plan: {Math.max(0, FREE_LIMIT - usageCount)} conversions remaining</span>
                 </div>
               )}
             </div>
 
             {/* Main Interface Card */}
-            <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 animate-fade-in-up delay-75 relative">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-white/5 animate-fade-in-up delay-75 relative">
 
               <ToolSelector
                 activeTab={activeTab}
@@ -690,9 +690,9 @@ const App: React.FC = () => {
 
                 {/* Batch Status Alert / Queue Info */}
                 {(completedCount > 0 || processingCount > 0) && (
-                  <div className="mt-8 mb-4 bg-gradient-to-r from-slate-50 to-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in shadow-sm">
+                  <div className="mt-8 mb-4 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800/50 dark:to-slate-900/50 border border-slate-200 dark:border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in shadow-sm">
                     <div className="flex items-center space-x-4 w-full md:w-auto">
-                      <div className={`p-2.5 rounded-full flex-shrink-0 ${processingCount > 0 ? 'bg-primary-50 text-primary-600' : 'bg-green-50 text-green-600'}`}>
+                      <div className={`p-2.5 rounded-full flex-shrink-0 ${processingCount > 0 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400'}`}>
                         {processingCount > 0 ? (
                           <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
@@ -701,15 +701,15 @@ const App: React.FC = () => {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-800">
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
                           {processingCount > 0
                             ? `Processing batch... (${processingCount} active)`
                             : 'Batch Processing Complete'}
                         </p>
-                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-0.5">
                           <span>Completed {completedCount} files.</span>
                           {savingsPercent > 0 && (
-                            <span className="inline-flex items-center text-green-600 font-bold bg-green-50 px-1.5 py-0.5 rounded">
+                            <span className="inline-flex items-center text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded">
                               Saved {formatBytes(totalSaved)} ({savingsPercent.toFixed(1)}%)
                             </span>
                           )}

@@ -87,7 +87,7 @@ const Header: React.FC<HeaderProps> = ({
     };
 
     return (
-        <header className="sticky top-0 z-50 transition-all duration-300 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+        <header className="sticky top-0 z-50 transition-all duration-300 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
             <div className="max-w-7xl mx-auto px-4 md:px-6 relative">
                 <div className="flex justify-between items-center h-16 md:h-20">
 
@@ -103,27 +103,27 @@ const Header: React.FC<HeaderProps> = ({
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <div className="text-lg md:text-2xl font-black tracking-tight text-slate-900 leading-none">
+                            <div className="text-lg md:text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
                                 Free<span className="bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">AI</span>
                             </div>
-                            <span className="text-[8px] md:text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] md:tracking-[0.2em] leading-none mt-0.5 md:mt-1 pl-0.5">Converter</span>
+                            <span className="text-[8px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.15em] md:tracking-[0.2em] leading-none mt-0.5 md:mt-1 pl-0.5">Converter</span>
                         </div>
                     </div>
 
                     {/* Desktop Navigation - Pill Design */}
                     <nav className="hidden lg:flex items-center justify-center">
-                        <div className="flex items-center p-1 bg-slate-100/50 rounded-full border border-white/50 backdrop-blur-md shadow-inner gap-0.5">
+                        <div className="flex items-center p-1 bg-slate-100/50 dark:bg-slate-900/50 rounded-full border border-slate-200/50 dark:border-white/10 backdrop-blur-md shadow-inner gap-0.5">
 
                             {/* Mega Menu Trigger */}
                             <div
-                                className="relative px-3 py-2 rounded-full cursor-pointer transition-all hover:bg-white hover:shadow-sm group"
+                                className="relative px-3 py-2 rounded-full cursor-pointer transition-all hover:bg-white dark:hover:bg-slate-800 hover:shadow-sm group"
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
                             >
-                                <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700 group-hover:text-primary-600 transition-colors">
+                                <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                     <Grid className="w-4 h-4" />
                                     <span>Tools</span>
-                                    <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-primary-500' : 'text-slate-400'}`} />
+                                    <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isMegaMenuOpen ? 'rotate-180 text-primary-500' : 'text-slate-400 dark:text-slate-500'}`} />
                                 </div>
                             </div>
 
@@ -133,14 +133,14 @@ const Header: React.FC<HeaderProps> = ({
                                 onMouseEnter={handleResourcesEnter}
                                 onMouseLeave={handleResourcesLeave}
                             >
-                                <div className="flex items-center gap-1.5 text-sm font-bold text-slate-600 group-hover:text-primary-600 transition-colors">
+                                <div className="flex items-center gap-1.5 text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                     <BookOpen className="w-4 h-4" />
                                     <span>Resources</span>
-                                    <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${resourcesOpen ? 'rotate-180 text-primary-500' : 'text-slate-400'}`} />
+                                    <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${resourcesOpen ? 'rotate-180 text-primary-500' : 'text-slate-400 dark:text-slate-500'}`} />
                                 </div>
 
                                 {/* Dropdown Menu */}
-                                <div className={`absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-white/50 overflow-hidden z-20 transition-all duration-300 origin-top ${resourcesOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'} ring-1 ring-black/5`}>
+                                <div className={`absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-xl shadow-xl border border-slate-200 dark:border-white/10 overflow-hidden z-20 transition-all duration-300 origin-top ${resourcesOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'} ring-1 ring-black/5`}>
                                     <div className="p-1">
                                         <button
                                             onClick={() => { onAboutClick(); setResourcesOpen(false); }}
@@ -294,7 +294,7 @@ const Header: React.FC<HeaderProps> = ({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <div className="bg-white/95 backdrop-blur-2xl rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12)] border border-slate-200/50 p-5 ring-1 ring-slate-900/5">
+                    <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12)] border border-slate-200 dark:border-white/5 p-5 ring-1 ring-slate-900/5 dark:ring-white/5">
                         {/* Quick Access Row */}
                         <div className="flex items-center gap-2 pb-4 mb-4 border-b border-slate-100">
                             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-2">Quick Access:</span>

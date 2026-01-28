@@ -80,14 +80,14 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         Next-Generation AI Engine
                     </div>
 
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1] animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-8 leading-[1.1] animate-fade-in-up text-slate-900 dark:text-white" style={{ animationDelay: '0.1s' }}>
                         Transform Files with <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-cyan-400 text-glow">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500 dark:from-indigo-400 dark:via-blue-400 dark:to-cyan-400 text-glow">
                             Intelligent Speed
                         </span>
                     </h1>
 
-                    <p className="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                    <p className="text-xl text-slate-700 dark:text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         Experience the world's most advanced client-side file processor.
                         Optimization, conversion, and AI editing—running 100% locally on your device.
                     </p>
@@ -95,7 +95,7 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                     <div className="flex flex-col sm:flex-row gap-5 justify-center animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                         <button
                             onClick={() => onNavigate('image-compressor')}
-                            className="group relative px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.5)] hover:shadow-[0_0_30px_rgba(79,70,229,0.7)] flex items-center justify-center gap-3"
+                            className="group relative px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold text-lg transition-all shadow-[0_10px_30px_rgba(79,70,229,0.3)] hover:shadow-[0_15px_40px_rgba(79,70,229,0.5)] flex items-center justify-center gap-3"
                         >
                             <Zap className="w-5 h-5 fill-current" />
                             Launch Accelerator
@@ -104,7 +104,7 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
 
                         <button
                             onClick={() => onNavigate('bg-remover')}
-                            className="px-8 py-4 glass-card hover:bg-slate-800 text-slate-300 hover:text-white rounded-xl font-bold transition-all flex items-center justify-center gap-3"
+                            className="px-8 py-4 glass-card hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-white rounded-xl font-bold transition-all flex items-center justify-center gap-3"
                         >
                             <Cpu className="w-5 h-5" />
                             AI Tools Suite
@@ -123,62 +123,62 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                         <div className="relative z-10 h-full flex flex-col justify-between">
                             <div>
                                 <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-6">
-                                    <Lock className="w-6 h-6 text-emerald-400" />
+                                    <Lock className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-white mb-2">Zero-Trust Privacy</h3>
-                                <p className="text-slate-400 max-w-md">Our WebAssembly core ensures your data never leaves your browser sandbox. No server uploads, ever.</p>
+                                <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Zero-Trust Privacy</h3>
+                                <p className="text-slate-600 dark:text-slate-400 max-w-md">Our WebAssembly core ensures your data never leaves your browser sandbox. No server uploads, ever.</p>
                             </div>
-                            <div className="mt-8 flex items-center gap-4 text-emerald-400 bg-emerald-500/10 w-fit px-4 py-2 rounded-full border border-emerald-500/20">
+                            <div className="mt-8 flex items-center gap-4 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 w-fit px-4 py-2 rounded-full border border-emerald-500/20">
                                 <CheckCircle2 className="w-4 h-4" />
-                                <span>SOC2 Compliant Architecture</span>
+                                <span>Local Sandboxing</span>
                             </div>
                         </div>
                     </div>
 
                     {/* Feature 2: Stats */}
-                    <div className="col-span-1 md:col-span-2 glass-card p-8 rounded-3xl flex flex-col justify-center items-center text-center group hover:bg-slate-800/80 transition-colors">
+                    <div className="col-span-1 md:col-span-2 glass-card p-8 rounded-3xl flex flex-col justify-center items-center text-center group transition-all hover:shadow-2xl">
                         <div className="mb-4 relative">
                             <div className="absolute inset-0 bg-blue-500 blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
-                            <Users className="w-16 h-16 text-blue-400 relative z-10" />
+                            <Users className="w-16 h-16 text-blue-600 dark:text-blue-400 relative z-10" />
                         </div>
-                        <h4 className="text-4xl font-black text-white mb-1">10M+</h4>
-                        <p className="text-slate-400 font-medium">Files Processed</p>
+                        <h4 className="text-4xl font-black text-slate-900 dark:text-white mb-1">1M+</h4>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium font-mono">Sessions Securely Handled</p>
                     </div>
 
                     {/* Feature 3: Speed */}
                     <div className="col-span-1 md:col-span-2 glass-card p-8 rounded-3xl group">
                         <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center mb-6">
-                            <ZapIcon className="w-6 h-6 text-amber-400" />
+                            <ZapIcon className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">Instant Scale</h3>
-                        <p className="text-slate-400 text-sm">GPU-accelerated processing handles thousands of files in parallel.</p>
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Instant Scale</h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm">GPU-accelerated processing handles thousands of files in parallel.</p>
                     </div>
 
                     {/* Feature 4: AI Power */}
                     <div className="col-span-1 md:col-span-2 glass-card p-8 rounded-3xl group relative overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent" />
                         <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-6 relative z-10">
-                            <Sparkles className="w-6 h-6 text-purple-400" />
+                            <Sparkles className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2 relative z-10">AI Neural Engine</h3>
-                        <p className="text-slate-400 text-sm relative z-10">Smart background removal and image enhancement algorithms.</p>
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 relative z-10">AI Neural Engine</h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm relative z-10">Smart background removal and image enhancement algorithms.</p>
                     </div>
 
                     {/* Feature 5: Offline */}
                     <div className="col-span-1 md:col-span-2 glass-card p-8 rounded-3xl group">
                         <div className="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center mb-6">
-                            <InfinityIcon className="w-6 h-6 text-pink-400" />
+                            <InfinityIcon className="w-6 h-6 text-pink-600 dark:text-pink-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">Offline Ready</h3>
-                        <p className="text-slate-400 text-sm">PWA capability allows full functionality without internet.</p>
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Offline Ready</h3>
+                        <p className="text-slate-600 dark:text-slate-400 text-sm">PWA capability allows full functionality without internet.</p>
                     </div>
                 </div>
 
                 {/* TOOLS GRID */}
                 <div className="mb-32">
                     <div className="flex items-center justify-between mb-10">
-                        <h2 className="text-3xl font-bold text-white">Powerful Tools</h2>
-                        <button onClick={() => onNavigate('image-compressor')} className="text-indigo-400 hover:text-indigo-300 font-medium flex items-center gap-2 transition-colors">
+                        <h2 className="text-3xl font-bold text-slate-900 dark:text-white">Powerful Tools</h2>
+                        <button onClick={() => onNavigate('image-compressor')} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium flex items-center gap-2 transition-colors">
                             View All <ArrowRight className="w-4 h-4" />
                         </button>
                     </div>
@@ -191,21 +191,21 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                                 className="glass-card glass-card-hover p-6 rounded-2xl text-left group relative overflow-hidden"
                             >
                                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                                    <tool.icon className="w-24 h-24 rotate-12" />
+                                    <tool.icon className={`w-24 h-24 rotate-12 ${tool.color.replace('400', '600')}`} />
                                 </div>
 
                                 <div className="flex items-start justify-between mb-4 relative z-10">
-                                    <div className={`w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center ${tool.color}`}>
+                                    <div className={`w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center ${tool.color.replace('400', '600')} dark:${tool.color}`}>
                                         <tool.icon className="w-6 h-6" />
                                     </div>
                                     {tool.badge && (
-                                        <span className={`px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider bg-slate-800 border border-slate-700 ${tool.color}`}>
+                                        <span className={`px-2 py-1 rounded-md text-[10px] uppercase font-bold tracking-wider bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 ${tool.color.replace('400', '600')} dark:${tool.color}`}>
                                             {tool.badge}
                                         </span>
                                     )}
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-indigo-400 transition-colors relative z-10">{tool.name}</h3>
-                                <p className="text-slate-400 text-sm relative z-10">{tool.desc}</p>
+                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors relative z-10">{tool.name}</h3>
+                                <p className="text-slate-600 dark:text-slate-400 text-sm relative z-10">{tool.desc}</p>
                             </button>
                         ))}
                     </div>
@@ -214,8 +214,8 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                 {/* SEO & COMPARE SECTION */}
                 <div className="grid lg:grid-cols-2 gap-16 mb-24 items-center">
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                            Why professionals switch to <span className="text-indigo-400">Local Processing</span>
+                        <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">
+                            Why professionals switch to <span className="text-indigo-600 dark:text-indigo-400">Local Processing</span>
                         </h2>
                         <div className="space-y-6">
                             {[
@@ -224,12 +224,12 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                                 { title: 'Reliability', desc: 'Works in air-gapped environments and flights.', icon: Command }
                             ].map((item, i) => (
                                 <div key={i} className="flex gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-700">
-                                        <item.icon className="w-5 h-5 text-indigo-400" />
+                                    <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-200 dark:border-slate-700">
+                                        <item.icon className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
                                     </div>
                                     <div>
-                                        <h4 className="text-white font-bold mb-1">{item.title}</h4>
-                                        <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                                        <h4 className="text-slate-900 dark:text-white font-bold mb-1">{item.title}</h4>
+                                        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
                                     </div>
                                 </div>
                             ))}
@@ -238,45 +238,45 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
 
                     <div className="relative">
                         {/* Abstract Tech Visual */}
-                        <div className="absolute inset-0 bg-indigo-500 rounded-full blur-[100px] opacity-20" />
-                        <div className="glass-card p-1 rounded-3xl relative z-10">
-                            <div className="bg-slate-950 rounded-[22px] p-6 lg:p-10 border border-white/5">
-                                <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-6">
+                        <div className="absolute inset-0 bg-indigo-500 rounded-full blur-[100px] opacity-10 dark:opacity-20" />
+                        <div className="glass-card p-1 rounded-3xl relative z-10 shadow-2xl">
+                            <div className="bg-white dark:bg-slate-950 rounded-[22px] p-6 lg:p-10 border border-slate-200 dark:border-white/5">
+                                <div className="flex items-center justify-between mb-8 border-b border-slate-100 dark:border-white/10 pb-6">
                                     <div>
-                                        <div className="text-xs text-indigo-400 font-bold uppercase tracking-wider mb-2">Performance Benchmark</div>
-                                        <div className="text-2xl font-bold text-white">Conversion Latency</div>
+                                        <div className="text-xs text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-wider mb-2">Performance Benchmark</div>
+                                        <div className="text-2xl font-bold text-slate-900 dark:text-white">Conversion Latency</div>
                                     </div>
                                     <div className="text-right">
-                                        <div className="text-3xl font-black text-emerald-400">0.05s</div>
-                                        <div className="text-xs text-emerald-500/70 font-mono">AVG TIME</div>
+                                        <div className="text-3xl font-black text-emerald-600 dark:text-emerald-400">0.05s</div>
+                                        <div className="text-xs text-emerald-600 dark:text-emerald-500/70 font-mono">AVG TIME</div>
                                     </div>
                                 </div>
                                 <div className="space-y-4">
                                     <div>
                                         <div className="flex justify-between text-sm mb-2">
-                                            <span className="text-white font-medium">Local AI (Ours)</span>
-                                            <span className="text-emerald-400 font-mono">50ms</span>
+                                            <span className="text-slate-900 dark:text-white font-medium">Local AI (Ours)</span>
+                                            <span className="text-emerald-600 dark:text-emerald-400 font-mono">50ms</span>
                                         </div>
-                                        <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                             <div className="h-full w-[5%] bg-emerald-500 rounded-full" />
                                         </div>
                                     </div>
                                     <div>
                                         <div className="flex justify-between text-sm mb-2">
-                                            <span className="text-slate-400">Cloud Competitor A</span>
+                                            <span className="text-slate-600 dark:text-slate-400">Cloud Competitor A</span>
                                             <span className="text-slate-500 font-mono">1200ms</span>
                                         </div>
-                                        <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                            <div className="h-full w-[60%] bg-slate-700 rounded-full" />
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-full w-[60%] bg-slate-300 dark:bg-slate-700 rounded-full" />
                                         </div>
                                     </div>
                                     <div>
                                         <div className="flex justify-between text-sm mb-2">
-                                            <span className="text-slate-400">Cloud Competitor B</span>
+                                            <span className="text-slate-600 dark:text-slate-400">Cloud Competitor B</span>
                                             <span className="text-slate-500 font-mono">3500ms</span>
                                         </div>
-                                        <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                            <div className="h-full w-[90%] bg-slate-700 rounded-full" />
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-full w-[90%] bg-slate-300 dark:bg-slate-700 rounded-full" />
                                         </div>
                                     </div>
                                 </div>
@@ -286,12 +286,12 @@ const Landing: React.FC<LandingProps> = ({ onNavigate }) => {
                 </div>
 
                 {/* TRUST LOGOS */}
-                <div className="border-t border-white/5 pt-16 text-center">
-                    <p className="text-slate-500 text-sm font-semibold uppercase tracking-widest mb-8">Trusted by developers at</p>
-                    <div className="flex flex-wrap justify-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                <div className="border-t border-slate-200 dark:border-white/5 pt-16 text-center">
+                    <p className="text-slate-500 dark:text-slate-500 text-sm font-semibold uppercase tracking-widest mb-8">Trusted by developers at</p>
+                    <div className="flex flex-wrap justify-center gap-12 opacity-60 dark:opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
                         {/* Simple text logos for aesthetic clean look */}
                         {['Vercel', 'Stripe', 'Supabase', 'OpenAI', 'Figma'].map(name => (
-                            <span key={name} className="text-xl font-bold text-white">{name}</span>
+                            <span key={name} className="text-xl font-bold text-slate-800 dark:text-white">{name}</span>
                         ))}
                     </div>
                 </div>

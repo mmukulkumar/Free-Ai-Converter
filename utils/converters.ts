@@ -3,6 +3,9 @@ import { optimizeSVG } from './optimizer';
 import { OptimizerSettings } from '../types';
 import { removeBackground, removeBackgroundAdvanced, initializeBackgroundRemoval } from './backgroundRemover';
 import { resizeImage, rotateImage, flipImage, addWatermark, cropImage } from './imageTools';
+import { convertVideo, convertAudio, gifToVideo, loadFFmpeg } from './mediaConverter';
+import { convertDocxToPdf, convertPdfToDocx, createEpub, extractPdfText } from './documentConverter';
+import { vectorizeImage, embedImageInSvg } from './vectorizer';
 
 // Formats that most modern browsers can decode natively via 'new Image()'
 const NATIVE_READ_FORMATS = [
@@ -218,13 +221,18 @@ export const convertFile = async (
         return await convertHeic(file, outputFmt, settings);
     }
 
-    // --- 3. PDF Generation (Image -> PDF) ---
+    // --- 3. PDF Generation (Image -> PDF or DOCX -> PDF) ---
     if (outputFmt === 'pdf') {
         if (NATIVE_READ_FORMATS.includes(inputFmt) || inputFmt === 'svg') {
             return await convertImageToPdf(file, settings);
         }
-        // Fallback for document-to-pdf (simulated)
-        return await simulateComplexConversion(file, 'pdf');
+        // Handle DOCX to PDF
+        if (inputFmt === 'docx' || inputFmt === 'doc') {
+            const blob = await convertDocxToPdf(file);
+            return { content: blob, extension: 'pdf' };
+        }
+        // Unsupported input for PDF conversion
+        throw new Error(`Cannot convert ${inputFmt.toUpperCase()} to PDF. Supported: images, SVG, DOCX.`);
     }
 
     // --- 4. PDF Rasterization (PDF -> JPG/PNG) ---
@@ -232,9 +240,18 @@ export const convertFile = async (
         return await convertPdfToImage(file, outputFmt, settings);
     }
 
-    // --- 5. Vectorization (Raster -> SVG) ---
+    // --- 5. Vectorization (Raster -> SVG) - REAL TRACING ---
     if (outputFmt === 'svg' && inputFmt !== 'svg') {
-        return await convertImageToSvg(file);
+        try {
+            // Use real vectorization with tracing
+            const svgContent = await vectorizeImage(file, 'logo');
+            return { content: svgContent, extension: 'svg' };
+        } catch (error) {
+            console.warn('Vectorization failed, falling back to embed:', error);
+            // Fallback to embed mode
+            const svgContent = await embedImageInSvg(file);
+            return { content: svgContent, extension: 'svg' };
+        }
     }
 
     // --- 6. Raster Conversion (Image -> JPG/PNG/WEBP/BMP) ---
@@ -254,8 +271,104 @@ export const convertFile = async (
         }
     }
 
-    // --- 7. Media & Document Simulation ---
-    return await simulateComplexConversion(file, outputFmt);
+    // --- 7. Video Conversion (FFmpeg) ---
+    if (['mp4', 'webm', 'avi'].includes(outputFmt) && ['mp4', 'mov', 'webm', 'avi', 'mkv', 'gif'].includes(inputFmt)) {
+        try {
+            // GIF to video is a special case
+            if (inputFmt === 'gif') {
+                const blob = await gifToVideo(file, outputFmt as 'mp4' | 'webm');
+                return { content: blob, extension: outputFmt };
+            }
+
+            const blob = await convertVideo(file, outputFmt as 'mp4' | 'webm' | 'avi', {
+                quality: 'high'
+            });
+            return { content: blob, extension: outputFmt };
+        } catch (error) {
+            console.error('Video conversion failed:', error);
+            throw new Error(`Failed to convert video to ${outputFmt.toUpperCase()}. ${(error as Error).message}`);
+        }
+    }
+
+    // --- 8. Video to GIF ---
+    if (outputFmt === 'gif' && ['mp4', 'mov', 'webm', 'avi'].includes(inputFmt)) {
+        try {
+            const blob = await convertVideo(file, 'gif', {
+                fps: 15,
+                scale: 480
+            });
+            return { content: blob, extension: 'gif' };
+        } catch (error) {
+            console.error('Video to GIF conversion failed:', error);
+            throw new Error('Failed to convert video to GIF.');
+        }
+    }
+
+    // --- 9. Audio Extraction (Video to Audio) ---
+    if (['mp3', 'wav', 'ogg', 'aac', 'flac'].includes(outputFmt) && ['mp4', 'mov', 'webm', 'avi', 'mkv'].includes(inputFmt)) {
+        try {
+            const blob = await convertAudio(file, outputFmt as 'mp3' | 'wav' | 'ogg' | 'aac' | 'flac', {
+                bitrate: 192
+            });
+            return { content: blob, extension: outputFmt };
+        } catch (error) {
+            console.error('Audio extraction failed:', error);
+            throw new Error(`Failed to extract audio as ${outputFmt.toUpperCase()}.`);
+        }
+    }
+
+    // --- 10. Audio Format Conversion ---
+    if (['mp3', 'wav', 'ogg', 'aac', 'flac'].includes(outputFmt) && ['mp3', 'wav', 'ogg', 'aac', 'flac', 'm4a'].includes(inputFmt)) {
+        try {
+            const blob = await convertAudio(file, outputFmt as 'mp3' | 'wav' | 'ogg' | 'aac' | 'flac', {
+                bitrate: 192
+            });
+            return { content: blob, extension: outputFmt };
+        } catch (error) {
+            console.error('Audio conversion failed:', error);
+            throw new Error(`Failed to convert audio to ${outputFmt.toUpperCase()}.`);
+        }
+    }
+
+    // --- 11. Document Conversion (DOCX <-> PDF) ---
+    if (inputFmt === 'docx' && outputFmt === 'pdf') {
+        try {
+            const blob = await convertDocxToPdf(file);
+            return { content: blob, extension: 'pdf' };
+        } catch (error) {
+            console.error('DOCX to PDF failed:', error);
+            throw new Error('Failed to convert Word document to PDF.');
+        }
+    }
+
+    if (inputFmt === 'pdf' && outputFmt === 'docx') {
+        try {
+            const blob = await convertPdfToDocx(file);
+            return { content: blob, extension: 'docx' };
+        } catch (error) {
+            console.error('PDF to DOCX failed:', error);
+            throw new Error('Failed to convert PDF to Word document.');
+        }
+    }
+
+    // --- 12. PDF to EPUB ---
+    if (inputFmt === 'pdf' && outputFmt === 'epub') {
+        try {
+            const text = await extractPdfText(file);
+            const blob = await createEpub(text, {
+                title: file.name.replace('.pdf', ''),
+                author: 'Converted by Free AI Converter'
+            });
+            return { content: blob, extension: 'epub' };
+        } catch (error) {
+            console.error('PDF to EPUB failed:', error);
+            throw new Error('Failed to convert PDF to EPUB.');
+        }
+    }
+
+    // --- 13. Fallback for unsupported conversions ---
+    console.warn(`Conversion from ${inputFmt} to ${outputFmt} is not fully implemented.`);
+    throw new Error(`Conversion from ${inputFmt.toUpperCase()} to ${outputFmt.toUpperCase()} is not supported yet.`);
 };
 
 // --- Helper Functions ---
@@ -479,27 +592,5 @@ const convertImageToRaster = (
     });
 };
 
-const convertImageToSvg = (file: File): Promise<{ content: string; extension: string }> => {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const base64 = e.target?.result as string;
-            const svg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
-          <image href="${base64}" width="100%" height="100%" />
-        </svg>`.trim();
-            resolve({ content: svg, extension: 'svg' });
-        };
-        reader.readAsDataURL(file);
-    });
-};
-
-const simulateComplexConversion = (file: File, outputExt: string): Promise<{ content: Blob; extension: string }> => {
-    return new Promise((resolve) => {
-        const delay = Math.min(Math.max(file.size / 100000, 1000), 4000);
-        setTimeout(() => {
-            console.log(`[Simulation] Converted ${file.name} to ${outputExt}`);
-            resolve({ content: file, extension: outputExt });
-        }, delay);
-    });
-};
+// Note: Old convertImageToSvg and simulateComplexConversion functions were removed
+// in favor of the new vectorizer.ts and mediaConverter.ts utilities
