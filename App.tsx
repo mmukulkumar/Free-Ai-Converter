@@ -8,13 +8,14 @@ import ToolSelector from './components/ToolSelector';
 import SettingsPanel from './components/SettingsPanel';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import AnimatedTitle from './components/AnimatedTitle';
 import GridLoader from './components/GridLoader';
 import Landing from './components/Landing';
 import { formatBytes } from './utils/optimizer';
 import { OptimizedFile, ToolType, OptimizerSettings } from './types';
 import { ALL_TABS } from './utils/formats';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import SearchModal from './components/SearchModal';
 import { HorizontalBannerAd, BetweenSectionAd, FooterBannerAd } from './components/ads/AdSlot';
 
 const Login = lazy(() => import('./components/Login'));
@@ -102,6 +103,7 @@ const App: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Existing App State
   const [activeTab, setActiveTab] = useState<ToolType>('image-compressor');
@@ -403,9 +405,9 @@ const App: React.FC = () => {
   const getHeroTitle = () => {
     if (activeTab === 'image-compressor') {
       return (
-        <div className="flex flex-col items-center animate-fade-in">
-          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2 flex items-center gap-2">
-            Image <AnimatedTitle text="Compressor" className="text-primary-600" />
+        <div className="flex flex-col items-center">
+          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
+            Image <span className="text-primary-600">Compressor</span>
           </span>
           <span className="text-lg text-slate-500 font-medium">Reduce file size while maintaining quality</span>
         </div>
@@ -413,9 +415,9 @@ const App: React.FC = () => {
     }
     if (activeTab === 'bg-remover') {
       return (
-        <div className="flex flex-col items-center animate-fade-in">
-          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2 flex items-center gap-2">
-            Background <AnimatedTitle text="Remover" className="text-primary-600" />
+        <div className="flex flex-col items-center">
+          <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
+            Background <span className="text-primary-600">Remover</span>
           </span>
           <span className="text-lg text-slate-500 font-medium">Remove image backgrounds automatically with AI</span>
         </div>
@@ -424,22 +426,18 @@ const App: React.FC = () => {
     const parts = activeTab.split('-');
     if (parts.length === 2) {
       return (
-        <div className="flex items-center justify-center gap-2 md:gap-3 animate-fade-in flex-wrap">
+        <div className="flex items-center justify-center gap-2 md:gap-3 flex-wrap">
           <span className="text-3xl md:text-5xl font-black text-slate-800 uppercase tracking-tight">{parts[0]}</span>
           <span className="text-xl md:text-2xl font-medium text-slate-400">to</span>
-          <AnimatedTitle
-            text={parts[1]}
-            className="text-primary-600"
-            containerClass="text-3xl md:text-5xl font-black uppercase tracking-tight"
-          />
+          <span className="text-3xl md:text-5xl font-black text-primary-600 uppercase tracking-tight">{parts[1]}</span>
           <span className="w-full text-center text-lg text-slate-500 font-medium mt-2">Converter</span>
         </div>
       );
     }
     return (
-      <div className="flex flex-col items-center animate-fade-in">
-        <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2 flex items-center gap-2">
-          SVG <AnimatedTitle text="Optimizer" className="text-primary-600" />
+      <div className="flex flex-col items-center">
+        <span className="text-3xl md:text-5xl font-black text-slate-800 tracking-tight mb-2">
+          SVG <span className="text-primary-600">Optimizer</span>
         </span>
         <span className="text-lg text-slate-500 font-medium">Compress vectors without quality loss</span>
       </div>
@@ -550,7 +548,9 @@ const App: React.FC = () => {
         onTermsClick={() => setCurrentView('terms')}
         onPromoteClick={() => setCurrentView('promote')}
         onDashboardClick={() => setCurrentView('dashboard')}
+
         onAdminClick={() => setCurrentView('admin')}
+        onSearchClick={() => setIsSearchOpen(true)}
       />
 
       {/* Limit Modal */}
@@ -590,6 +590,15 @@ const App: React.FC = () => {
           />
         )}
       </Suspense>
+
+      <SearchModal
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        onSelect={(tool) => {
+          handleTabChange(tool);
+          setCurrentView('landing'); // Switch to landing or relevant view
+        }}
+      />
 
       <main className={`flex-1 w-full z-10 relative ${currentView === 'landing' ? '' : 'max-w-6xl mx-auto px-4 py-8 md:py-16'}`}>
 
@@ -736,9 +745,11 @@ const App: React.FC = () => {
 
 // Wrapped App with AuthProvider
 const AppWithAuth: React.FC = () => (
-  <AuthProvider>
-    <App />
-  </AuthProvider>
+  <ThemeProvider>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </ThemeProvider>
 );
 
 export default AppWithAuth;

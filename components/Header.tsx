@@ -6,6 +6,7 @@ import {
     Sparkles, Layers, Grid, ArrowRight, Cpu, Eraser,
     BookOpen, Info, Rocket, ShieldCheck, LayoutDashboard, Shield, Settings
 } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
 import { MENU_CATEGORIES } from '../utils/formats';
 import { ToolType } from '../types';
 
@@ -14,6 +15,8 @@ interface HeaderProps {
     onTabChange: (id: ToolType) => void;
     isAuthenticated: boolean;
     user: { name: string; email: string } | null;
+    name: string;
+    email: string;
     isAdmin?: boolean;
     onLoginClick: () => void;
     onSignupClick: () => void;
@@ -25,6 +28,7 @@ interface HeaderProps {
     onPromoteClick: () => void;
     onDashboardClick?: () => void;
     onAdminClick?: () => void;
+    onSearchClick: () => void;
 }
 
 const getToolSlug = (tool: ToolType): string => {
@@ -49,7 +53,8 @@ const Header: React.FC<HeaderProps> = ({
     onTermsClick,
     onPromoteClick,
     onDashboardClick,
-    onAdminClick
+    onAdminClick,
+    onSearchClick
 }) => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -174,14 +179,15 @@ const Header: React.FC<HeaderProps> = ({
 
                     {/* Right Side Actions */}
                     <div className="hidden md:flex items-center space-x-3">
-                        <div className="relative hidden xl:block group">
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="pl-9 pr-4 py-2 bg-slate-100/50 border border-transparent rounded-full text-sm font-medium text-slate-700 w-36 focus:w-56 transition-all focus:ring-2 focus:ring-primary-100 focus:bg-white focus:border-primary-200 placeholder:text-slate-400 group-hover:bg-white group-hover:shadow-sm"
-                            />
-                            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 transition-colors group-hover:text-primary-500" />
-                        </div>
+                        <button
+                            onClick={onSearchClick}
+                            className="p-2 text-slate-500 hover:text-primary-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-primary-400 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                            aria-label="Search"
+                        >
+                            <Search className="w-5 h-5" />
+                        </button>
+
+                        <ThemeToggle />
 
                         {isAuthenticated && user ? (
                             <div className="relative">
