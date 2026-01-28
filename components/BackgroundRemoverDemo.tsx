@@ -181,7 +181,7 @@ const BackgroundRemoverDemo: React.FC<BackgroundRemoverDemoProps> = ({ onProcess
           {isProcessing && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
               <p className="text-blue-700 font-medium">Processing your image...</p>
-              <p className="text-blue-600 text-sm mt-1">This may take a few seconds</p>
+              <p className="text-blue-600 text-sm mt-1">Initializing AI models (first run may take a moment)...</p>
             </div>
           )}
         </div>
