@@ -25,6 +25,7 @@ const CORE_TOOLS: TabItem[] = [
   { id: 'image-cropper', label: 'Image Cropper', category: 'image', isNew: true },
   { id: 'image-watermark', label: 'Watermark Tool', category: 'image', isNew: true },
   { id: 'optimizer', label: 'SVG Optimizer', category: 'vector' },
+  { id: 'ai-audio-editor', label: 'AI Audio Editor', category: 'audio', isNew: true },
   { id: 'svg-png', label: 'SVG to PNG', category: 'vector' },
   { id: 'png-svg', label: 'PNG to SVG', category: 'vector' }, // Re-categorized to vector as output is vector
   { id: 'jpg-svg', label: 'JPG to SVG', category: 'vector' },
@@ -54,6 +55,7 @@ const EXTRA_TOOLS: TabItem[] = [
   // Documents
   { id: 'docx-pdf', label: 'Word to PDF', category: 'document' },
   { id: 'pdf-docx', label: 'PDF to Word', category: 'document' },
+  { id: 'pdf-jpg', label: 'PDF to JPG', category: 'document' },
   { id: 'pdf-epub', label: 'PDF to EPUB', category: 'document' },
   { id: 'epub-pdf', label: 'EPUB to PDF', category: 'document' },
   { id: 'heic-pdf', label: 'HEIC to PDF', category: 'document' },

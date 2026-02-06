@@ -4,7 +4,7 @@ import {
     ChevronDown, Search, Menu, X, Zap, User, LogOut,
     Image as ImageIcon, FileText, Video, Music, Box, Camera,
     Sparkles, Layers, Grid, ArrowRight, Cpu, Eraser,
-    BookOpen, Info, Rocket, ShieldCheck, LayoutDashboard, Shield, Settings
+    BookOpen, Info, Rocket, ShieldCheck, LayoutDashboard, Shield, Settings, Newspaper
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { MENU_CATEGORIES } from '../utils/formats';
@@ -142,6 +142,16 @@ const Header: React.FC<HeaderProps> = ({
                                 {/* Dropdown Menu */}
                                 <div className={`absolute top-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-xl shadow-xl border border-slate-200 dark:border-white/10 overflow-hidden z-20 transition-all duration-300 origin-top ${resourcesOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-2 invisible pointer-events-none'} ring-1 ring-black/5`}>
                                     <div className="p-1">
+                                        <a
+                                            href="https://dmsprism.com/blog/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setResourcesOpen(false)}
+                                            className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-600 rounded-lg transition-colors"
+                                        >
+                                            <Newspaper className="w-4 h-4" />
+                                            Blog
+                                        </a>
                                         <button
                                             onClick={() => { onAboutClick(); setResourcesOpen(false); }}
                                             className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-primary-600 rounded-lg transition-colors"
@@ -337,9 +347,8 @@ const Header: React.FC<HeaderProps> = ({
                         <div className="grid grid-cols-6 gap-4">
                             {MENU_CATEGORIES.map((category) => {
                                 const Icon = getCategoryIcon(category.title);
-                                // Limit items shown in mega menu for compact view
-                                const displayItems = category.items.filter(item => item.id !== 'bg-remover').slice(0, 5);
-                                const hasMore = category.items.length > 5;
+                                // Show all items in mega menu
+                                const displayItems = category.items.filter(item => item.id !== 'bg-remover');
 
                                 return (
                                     <div key={category.title} className="space-y-2">
@@ -363,13 +372,6 @@ const Header: React.FC<HeaderProps> = ({
                                                     </a>
                                                 </li>
                                             ))}
-                                            {hasMore && (
-                                                <li>
-                                                    <span className="block px-2 py-1 text-xs text-slate-400 font-medium">
-                                                        +{category.items.length - 5} more
-                                                    </span>
-                                                </li>
-                                            )}
                                         </ul>
                                     </div>
                                 );
@@ -444,6 +446,18 @@ const Header: React.FC<HeaderProps> = ({
                                         </div>
                                         <span className="text-[10px] font-bold text-slate-700 text-center leading-tight">SVG Opt</span>
                                     </button>
+                                    <button
+                                        onClick={() => {
+                                            onTabChange('ai-audio-editor');
+                                            setMobileMenuOpen(false);
+                                        }}
+                                        className="flex flex-col items-center gap-1.5 p-3 bg-white rounded-xl border border-primary-100 shadow-sm hover:shadow-md transition-all"
+                                    >
+                                        <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
+                                            <Music className="w-4 h-4 text-indigo-600" />
+                                        </div>
+                                        <span className="text-[10px] font-bold text-slate-700 text-center leading-tight">Audio Edit</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -490,6 +504,15 @@ const Header: React.FC<HeaderProps> = ({
                             <div className="p-4 pt-0">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Resources</p>
                                 <div className="grid grid-cols-2 gap-2">
+                                    <a
+                                        href="https://dmsprism.com/blog/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"
+                                    >
+                                        <Newspaper className="w-4 h-4 text-slate-400" /> Blog
+                                    </a>
                                     <button
                                         onClick={() => { onAboutClick(); setMobileMenuOpen(false); }}
                                         className="flex items-center gap-2 px-3 py-2.5 bg-slate-50 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-colors"

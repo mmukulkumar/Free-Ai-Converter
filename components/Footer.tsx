@@ -32,7 +32,7 @@ const Footer: React.FC<FooterProps> = ({ onPrivacyClick, onTermsClick, onAboutCl
                         <h4 className="font-bold text-slate-900 dark:text-white mb-4">Resources</h4>
                         <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
                             <li><button onClick={onAboutClick} className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">About Us</button></li>
-                            <li><a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a></li>
+                            <li><a href="https://dmsprism.com/blog/" target="_blank" rel="noopener noreferrer" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Blog</a></li>
                             <li><a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Documentation</a></li>
                             <li><a href="#" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">API Access</a></li>
                         </ul>

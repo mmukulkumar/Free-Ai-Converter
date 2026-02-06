@@ -28,6 +28,7 @@ const AboutUs = lazy(() => import('./components/AboutUs'));
 const AuthModal = lazy(() => import('./components/auth/AuthModal'));
 const UserDashboard = lazy(() => import('./components/dashboard/UserDashboard'));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard'));
+
 const PricingModal = lazy(() => import('./components/subscription/PricingModal'));
 
 const FREE_LIMIT = 20;
@@ -39,6 +40,7 @@ type UserState = { name: string; email: string } | null;
 const getToolSlug = (tool: ToolType): string => {
   if (tool === 'image-compressor') return 'compress-image';
   if (tool === 'bg-remover') return 'remove-background';
+  if (tool === 'optimizer') return 'svg-optimizer';
   if (tool === 'optimizer') return 'svg-optimizer';
   return tool.replace('-', '-to-');
 };
@@ -444,6 +446,17 @@ const App: React.FC = () => {
     );
   };
 
+  if (activeTab === 'ai-audio-editor') {
+    return (
+      <div className="flex flex-col items-center">
+        <span className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
+          AI <span className="text-primary-600 dark:text-primary-400">Audio Editor</span>
+        </span>
+        <span className="text-lg text-slate-600 dark:text-slate-400 font-medium">Edit, Cut, Clean & Enhance Audio in Browser</span>
+      </div>
+    );
+  }
+
   // View Routing
   if (currentView === 'privacy') {
     return (
@@ -548,7 +561,8 @@ const App: React.FC = () => {
         onTermsClick={() => setCurrentView('terms')}
         onPromoteClick={() => setCurrentView('promote')}
         onDashboardClick={() => setCurrentView('dashboard')}
-
+        name={user?.name || ''}
+        email={user?.email || ''}
         onAdminClick={() => setCurrentView('admin')}
         onSearchClick={() => setIsSearchOpen(true)}
       />
@@ -633,93 +647,100 @@ const App: React.FC = () => {
               {/* Workspace Area */}
               <div className="p-6 md:p-8 min-h-[400px]">
 
-                {/* 1. SETTINGS PANEL (Exposed Compression) */}
-                <SettingsPanel
-                  activeTab={activeTab}
-                  settings={optimizerSettings}
-                  onChange={setOptimizerSettings}
-                />
-
-                {/* 2. DROP ZONE */}
-                <DropZone
-                  onFilesAdded={handleFilesAdded}
-                  onClear={handleClear}
-                  hasFiles={files.length > 0}
-                  acceptedExtensions={acceptedExtensions}
-                />
-
-                {/* 3. CONVERT BUTTON & STATUS */}
-                {pendingCount > 0 && (
-                  <div className="mt-8 flex justify-center animate-fade-in">
-                    <button
-                      onClick={handleConvertFiles}
-                      disabled={processingCount > 0}
-                      className={`
-                                        relative group flex items-center gap-3 px-10 py-4 rounded-full font-black text-base uppercase tracking-wider shadow-xl transition-all hover:-translate-y-1 active:scale-95
-                                        ${processingCount > 0
-                          ? 'bg-slate-300 text-white cursor-wait pr-6 pl-6'
-                          : 'bg-primary-600 hover:bg-primary-500 text-white shadow-primary-500/40 hover:shadow-primary-500/60'
-                        }
-                                    `}
-                    >
-                      {processingCount > 0 ? (
-                        <>
-                          <div className="mr-2 transform scale-75 origin-right">
-                            <GridLoader />
-                          </div>
-                          <span className="ml-1">
-                            {activeTab === 'image-compressor' ? 'Compressing...' :
-                              activeTab === 'bg-remover' ? 'Removing Background...' : 'Converting...'}
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <Zap className="w-6 h-6 fill-current" />
-                          <span>
-                            {activeTab === 'image-compressor' ? `Compress ${pendingCount} Files` :
-                              activeTab === 'bg-remover' ? `Process ${pendingCount} Images` : `Convert ${pendingCount} Files`}
-                          </span>
-                          <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-bold border-2 border-white">
-                            {pendingCount}
-                          </span>
-                        </>
-                      )}
-                    </button>
-                  </div>
+                {/* 1. SETTINGS PANEL */}
+                {activeTab !== 'ai-audio-editor' && (
+                  <SettingsPanel
+                    activeTab={activeTab}
+                    settings={optimizerSettings}
+                    onChange={setOptimizerSettings}
+                  />
                 )}
 
-                {/* Batch Status Alert / Queue Info */}
-                {(completedCount > 0 || processingCount > 0) && (
-                  <div className="mt-8 mb-4 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800/50 dark:to-slate-900/50 border border-slate-200 dark:border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in shadow-sm">
-                    <div className="flex items-center space-x-4 w-full md:w-auto">
-                      <div className={`p-2.5 rounded-full flex-shrink-0 ${processingCount > 0 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400'}`}>
-                        {processingCount > 0 ? (
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                        ) : (
-                          <Check className="w-5 h-5" />
-                        )}
-                      </div>
+                {/* SPECIALIZED TOOLS */}
+                ) : (
+                <>
+                  {/* 2. DROP ZONE */}
+                  <DropZone
+                    onFilesAdded={handleFilesAdded}
+                    onClear={handleClear}
+                    hasFiles={files.length > 0}
+                    acceptedExtensions={acceptedExtensions}
+                  />
 
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
-                          {processingCount > 0
-                            ? `Processing batch... (${processingCount} active)`
-                            : 'Batch Processing Complete'}
-                        </p>
-                        <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                          <span>Completed {completedCount} files.</span>
-                          {savingsPercent > 0 && (
-                            <span className="inline-flex items-center text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded">
-                              Saved {formatBytes(totalSaved)} ({savingsPercent.toFixed(1)}%)
+                  {/* 3. CONVERT BUTTON & STATUS */}
+                  {pendingCount > 0 && (
+                    <div className="mt-8 flex justify-center animate-fade-in">
+                      <button
+                        onClick={handleConvertFiles}
+                        disabled={processingCount > 0}
+                        className={`
+                                            relative group flex items-center gap-3 px-10 py-4 rounded-full font-black text-base uppercase tracking-wider shadow-xl transition-all hover:-translate-y-1 active:scale-95
+                                            ${processingCount > 0
+                            ? 'bg-slate-300 text-white cursor-wait pr-6 pl-6'
+                            : 'bg-primary-600 hover:bg-primary-500 text-white shadow-primary-500/40 hover:shadow-primary-500/60'
+                          }
+                                        `}
+                      >
+                        {processingCount > 0 ? (
+                          <>
+                            <div className="mr-2 transform scale-75 origin-right">
+                              <GridLoader />
+                            </div>
+                            <span className="ml-1">
+                              {activeTab === 'image-compressor' ? 'Compressing...' :
+                                activeTab === 'bg-remover' ? 'Removing Background...' : 'Converting...'}
                             </span>
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-6 h-6 fill-current" />
+                            <span>
+                              {activeTab === 'image-compressor' ? `Compress ${pendingCount} Files` :
+                                activeTab === 'bg-remover' ? `Process ${pendingCount} Images` : `Convert ${pendingCount} Files`}
+                            </span>
+                            <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full text-white text-xs flex items-center justify-center font-bold border-2 border-white">
+                              {pendingCount}
+                            </span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Batch Status Alert / Queue Info */}
+                  {(completedCount > 0 || processingCount > 0) && (
+                    <div className="mt-8 mb-4 bg-gradient-to-r from-slate-50 to-white dark:from-slate-800/50 dark:to-slate-900/50 border border-slate-200 dark:border-white/5 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-fade-in shadow-sm">
+                      <div className="flex items-center space-x-4 w-full md:w-auto">
+                        <div className={`p-2.5 rounded-full flex-shrink-0 ${processingCount > 0 ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400' : 'bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400'}`}>
+                          {processingCount > 0 ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <Check className="w-5 h-5" />
                           )}
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                            {processingCount > 0
+                              ? `Processing batch... (${processingCount} active)`
+                              : 'Batch Processing Complete'}
+                          </p>
+                          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400 mt-0.5">
+                            <span>Completed {completedCount} files.</span>
+                            {savingsPercent > 0 && (
+                              <span className="inline-flex items-center text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-1.5 py-0.5 rounded">
+                                Saved {formatBytes(totalSaved)} ({savingsPercent.toFixed(1)}%)
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                <FileList files={files} />
+                  <FileList files={files} />
+                </>
+
               </div>
             </div>
 
@@ -739,7 +760,7 @@ const App: React.FC = () => {
         onTermsClick={() => setCurrentView('terms')}
         onAboutClick={() => setCurrentView('about')}
       />
-    </div>
+    </div >
   );
 };
 
